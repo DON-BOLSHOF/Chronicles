@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1755" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/drawable/backgroundframe.xml" value="0.104" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/drawable/edittextstyle.xml" value="0.104" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1755" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/fragment_scene.xml" value="0.5" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/test_activity_main.xml" value="0.35688405797101447" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/xml/anim.xml" value="0.14351851851851852" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
