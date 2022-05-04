@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <ImageView
         android:id="@+id/BackgroundImage"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/campaign" />
+        app:srcCompat="@drawable/campaign"/>
 
     <TextView
         android:id="@+id/ProjectName"

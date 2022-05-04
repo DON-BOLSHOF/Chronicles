@@ -43,21 +43,23 @@
                 android:id="@+id/Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/huxtable"
+                android:gravity="center"
                 android:text="Title"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:fontFamily="@font/huxtable"
-                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="@+id/PergamentImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.026"
-                tools:layout_editor_absoluteX="0dp" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="140sp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="75dp"
                 android:layout_marginBottom="450dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -81,7 +83,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/TextLayout"
                 android:layout_width="match_parent"
-                android:layout_height="180sp"
+                android:layout_height="160sp"
                 android:layout_marginTop="200dp"
                 android:layout_marginBottom="300dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -91,6 +93,7 @@
                 app:layout_constraintVertical_bias="0.0">
 
                 <ScrollView
+                    android:id="@+id/TextScrollView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
@@ -107,24 +110,41 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/huxtable"
                         android:text="TextView00000555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </ScrollView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/ButtonLayout"
+            <ScrollView
+                android:id="@+id/ButtonScroll"
                 android:layout_width="match_parent"
-                android:layout_height="135sp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@+id/PergamentImage"
-                app:layout_constraintEnd_toEndOf="@+id/TextLayout"
+                android:layout_height="125sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/PergamentImage"
-                app:layout_constraintVertical_bias="0.773">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.76">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ButtonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="125sp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@+id/PergamentImage"
+                    app:layout_constraintEnd_toEndOf="@+id/TextLayout"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/PergamentImage"
+                    app:layout_constraintVertical_bias="0.764">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </ScrollView>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"

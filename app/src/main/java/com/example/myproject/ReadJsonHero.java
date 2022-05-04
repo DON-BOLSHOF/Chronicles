@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class ReadJsonHero {
     private static SharedPreferences sharedPreferences;
@@ -42,9 +41,11 @@ public class ReadJsonHero {
         JSONObject _inputHero = new JSONObject();
         try {
             _inputHero.put("FatherRelations", hero.getFatherRel());
-            _inputHero.put("Reputation", hero.getPopularity());
+            _inputHero.put("Popularity", hero.getPopularity());
             _inputHero.put("Money", hero.getMoney());
             _inputHero.put("FightSkills", hero.getFightSkill());
+            _inputHero.put("HasEquip", hero.isHasEquip());
+            _inputHero.put("HasHorse", hero.isHasHorse());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -69,11 +70,13 @@ public class ReadJsonHero {
         JSONObject _jsonHero = new JSONObject(_hero);
 
         int fatherRel = _jsonHero.getInt("FatherRelations");
-        int popularity = _jsonHero.getInt("Reputation");
+        int popularity = _jsonHero.getInt("Popularity");
         int money = _jsonHero.getInt("Money");
         int fightSkill = _jsonHero.getInt("FightSkills");
+        boolean hasEquip = _jsonHero.getBoolean("HasEquip");
+        boolean HasHorse = _jsonHero.getBoolean("HasHorse");
 
-        Hero mHero = new Hero(fatherRel, popularity, money, fightSkill);
+        Hero mHero = new Hero(fatherRel, popularity, money, fightSkill,hasEquip,HasHorse);
         return  mHero;
     }
 
@@ -82,10 +85,16 @@ public class ReadJsonHero {
         sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        String JsonHero = HeroToJson(hero);
+        if(hero != null) {
+            String JsonHero = HeroToJson(hero);
 
-        editor.putString(SAVED_HERO, JsonHero);
-        editor.commit();
+            editor.putString(SAVED_HERO, JsonHero);
+            editor.commit();
+        }
+        else{
+            editor.putString(SAVED_HERO, null);
+            editor.commit();
+        }
     }
 
     public static Hero SetNewGameHero(Context context) throws JSONException, IOException {
@@ -94,9 +103,13 @@ public class ReadJsonHero {
         JSONObject _jsonRoot = new JSONObject(jsonText);
         int _fatherRel = _jsonRoot.getInt("FatherRelations");
         int _money = _jsonRoot.getInt("Money");
-        int _rep = _jsonRoot.getInt("Reputation");
+        int _popularity = _jsonRoot.getInt("Popularity");
         int _fightSkill = _jsonRoot.getInt("FightSkills");
-        Hero _hero = new Hero(_fatherRel, _rep, _money, _fightSkill);
+        boolean hasEquip = _jsonRoot.getBoolean("HasEquip");
+        boolean HasHorse = _jsonRoot.getBoolean("HasHorse");
+
+        Hero _hero = new Hero(_fatherRel, _popularity, _money, _fightSkill,hasEquip,HasHorse);
+
         return _hero;
     }
 }

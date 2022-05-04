@@ -8,7 +8,11 @@
         <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/drawable/edittextstyle.xml" value="0.104" />
         <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1755" />
         <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/add_event_fragment.xml" value="0.3625" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/event_activity.xml" value="0.271286231884058" />
         <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/fragment_scene.xml" value="0.5" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/note_event.xml" value="0.3625" />
+        <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/note_event_fragment.xml" value="0.3625" />
         <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/layout/test_activity_main.xml" value="0.35688405797101447" />
         <entry key="..\:/Users/Acer/AndroidStudioProjects/MyProject/app/src/main/res/xml/anim.xml" value="0.14351851851851852" />
       </map>

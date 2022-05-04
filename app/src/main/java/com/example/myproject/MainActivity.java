@@ -36,9 +36,12 @@ public class MainActivity extends AppCompatActivity {
         _startButton = (Button) findViewById(R.id.startButton);
         _continueButton = (Button) findViewById(R.id.continueButton);
 
+        String _titles = getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
         _startButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+
+                OverWriteParams(); // Перезапись sharedPrefs
 
                 try {
                     chapterEvents = new ArrayList<Event>(ReadJsonScene.ReadNewSceneJSONFile(MainActivity.this));
@@ -55,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String _titles = getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
         if(_titles != null) {
             _continueButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    if(_titles.contains("Пробуждение"))  // Да костыль
+                    if(_titles.contains("Добро пожаловать в Декруа") || _titles.contains("Пробуждение"))  // Да костыль
                         currentEvent = chapterEvents.get(0);
                     else
                         currentEvent = chapterEvents.get(RandomEvent());
@@ -92,5 +94,16 @@ public class MainActivity extends AppCompatActivity {
         Random _rand = new Random();
         int _value = _rand.nextInt(chapterEvents.size());
         return _value;
+    }
+
+    private void OverWriteParams(){
+        try {
+            ReadJsonScene.OverWriteParams(MainActivity.this, null);
+            ReadJsonHero.OverWriteParams(MainActivity.this, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

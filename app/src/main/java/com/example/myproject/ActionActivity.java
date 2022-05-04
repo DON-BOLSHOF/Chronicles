@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +14,10 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class ActionActivity extends AppCompatActivity {
+public class ActionActivity extends AppCompatActivity implements FragmentSceneManager.AddMusic {
     private MediaPlayer _mPlayer;
     private Boolean _isAddMusicPlaying = false;
+    protected static ImageView blackout;
 
     @Override
     public void onDestroy() {
@@ -28,9 +30,7 @@ public class ActionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MusicService.class); //Выключение саундрека
         stopService(intent);
 
-        if (_isAddMusicPlaying) { //Выключение побочных звуков запущенных игрой
-            _mPlayer.pause();
-        }
+        StopAddMusic();
 
         try {
             ReadJsonScene.OverWriteParams(this, MainActivity.chapterEvents);
@@ -50,7 +50,9 @@ public class ActionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_activity_main);
+        setContentView(R.layout.event_activity);
+
+        blackout = findViewById(R.id.BackgroundBlackout);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Set Portrait
         getSupportActionBar().hide(); //Удалим название проекта сверху
@@ -59,7 +61,7 @@ public class ActionActivity extends AppCompatActivity {
     }
 
     private void SetScene(){
-        FragmentSceneManager _scene = new FragmentSceneManager();
+        FragmentSceneManager _scene = new FragmentSceneManager(this);
         FragmentTransaction _ft = getSupportFragmentManager().beginTransaction();
         _ft.replace(R.id.sceneLayout, _scene);
         _ft.commit();
@@ -70,10 +72,18 @@ public class ActionActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    private void SetAdditionalMusic(String musicName){
+    @Override
+    public void SetAddMusic(String musicName){
         int resID = getResources().getIdentifier(musicName , "raw", MainActivity.PACKAGE_NAME);
         _mPlayer = MediaPlayer.create(this, resID);
         _mPlayer.start();
         _isAddMusicPlaying = true;
+    }
+
+    @Override
+    public void StopAddMusic(){
+        if (_isAddMusicPlaying) { //Выключение побочных звуков запущенных игрой
+            _mPlayer.pause();
+        }
     }
 }

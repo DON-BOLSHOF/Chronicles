@@ -64,17 +64,21 @@ public class ReadJsonScene {
     }
 
     public static void OverWriteParams(Context context, ArrayList<Event> events) throws  IOException, JSONException{
-
-        JSONArray _lastEventsNames = new JSONArray();
-
-        for (int i = 0;i <events.size(); i++){
-            _lastEventsNames.put(events.get(i).get_titleName());
-        }
-
         sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(SAVED_TITLES, _lastEventsNames.toString());
-        editor.commit();
+        if(events == null){
+            editor.putString(SAVED_TITLES, null);
+            editor.commit();
+        }else {
+            JSONArray _lastEventsNames = new JSONArray();
+
+            for (int i = 0; i < events.size(); i++) {
+                _lastEventsNames.put(events.get(i).get_titleName());
+            }
+
+            editor.putString(SAVED_TITLES, _lastEventsNames.toString());
+            editor.commit();
+        }
     }
 
     protected static String ReadSharedPrefTitles(Context context){
@@ -88,30 +92,59 @@ public class ReadJsonScene {
     }
 
     private static CustomButton ReadButtonJson(JSONObject button) throws  JSONException {
-        String[][] changed = null;
+        String[][] check = null;
+        Reaction[] reactions = null;
 
         String buttonName = button.getString("ButtonName");
-        JSONObject reaction = button.getJSONObject("EventReaction");
-        String reactTitle = reaction.getString("Title");
-        String reactText = reaction.getString("ReactionText");
 
-        JSONObject reacEvent = reaction.getJSONObject("ParameterReact");
-        JSONArray willChanged = reacEvent.getJSONArray("WillChanged");
-        JSONArray willChangedFor = reacEvent.getJSONArray("WillChangedFor");
-        changed = new String[willChanged.length()][2]; // [Имя][Значение] размерность одинаковая будет
+        if (buttonName.equals("Nothing"))
+            return null;
 
-        for(int z = 0;z<willChanged.length();z++){
-            String reactParam = willChanged.getString(z);
-            if(reactParam.equals("Nothing")) {
-                changed = null;
+        JSONObject checkEvent = button.getJSONObject("WhatCheck");
+        JSONArray toCheck = checkEvent.getJSONArray("ToCheck");
+        JSONArray checkFor = checkEvent.getJSONArray("Params");
+        check = new String[toCheck.length()][2];
+
+        for(int z = 0;z<toCheck.length();z++){
+            String checkParam = toCheck.getString(z);
+            if(checkParam.equals("Nothing")) {
+                check = null;
                 break;
             }
-            String reactValue = willChangedFor.getString(z);
-            changed[z][0] = reactParam;
-            changed[z][1] = reactValue;
+            String checkValue = checkFor.getString(z);
+            check[z][0] = checkParam;
+            check[z][1] = checkValue;
         }
 
-        return new CustomButton(buttonName, reactTitle, reactText, changed);
+        JSONArray reactionJSON = button.getJSONArray("EventReaction");
+        reactions = new Reaction[reactionJSON.length()];
+
+        for(int i = 0; i< reactionJSON.length(); i++) {
+            String[][] changed = null;
+            JSONObject object = reactionJSON.getJSONObject(i);
+            String reactTitle = object.getString("Title");
+            String reactText = object.getString("ReactionText");
+
+            JSONObject reactEvent = object.getJSONObject("ParameterReact");
+            JSONArray willChanged = reactEvent.getJSONArray("WillChanged");
+            JSONArray willChangedFor = reactEvent.getJSONArray("WillChangedFor");
+            changed = new String[willChanged.length()][2]; // [Имя][Значение] размерность одинаковая будет
+
+            for (int j = 0; j < willChanged.length(); j++) {
+                String reactParam = willChanged.getString(j);
+                if (reactParam.equals("Nothing")) {
+                    changed = null;
+                    break;
+                }
+                String reactValue = willChangedFor.getString(j);
+                changed[j][0] = reactParam;
+                changed[j][1] = reactValue;
+            }
+
+            reactions[i] = new Reaction(reactTitle, reactText, changed);
+        }
+
+        return new CustomButton(buttonName,reactions, check);
     }
 
     private static Event ReadEvent(JSONObject _jsonEvent) throws  JSONException {
@@ -120,10 +153,81 @@ public class ReadJsonScene {
         String _imageName = _jsonEvent.getString("ImageName");
         String _eventText = _jsonEvent.getString("EventText");
         Boolean _isLoop = _jsonEvent.getBoolean("IsLoop");
+        String _typeEvent = _jsonEvent.getString("EventType");
+        String _addMusic = _jsonEvent.getBoolean("HasAddMusic") ? _jsonEvent.getString("AddMusic") : null;
+        String _nameToSet = !_jsonEvent.getString("SetEvent").equals("Nothing") ? _jsonEvent.getString("SetEvent") :null;
 
-        CustomButton[] _buttons = ReadButton(_jsonEvent);
+        CustomButton[] _buttons =  ReadButton(_jsonEvent);
 
-        return new Event(_titleName, _imageName, _eventText, _buttons, _isLoop);
+        boolean _hasAddEvent = _jsonEvent.getBoolean("HasAddEvent");
+        String _addEventType = _hasAddEvent ? _jsonEvent.getString("AddEventType") : null;
+
+        AdditionalEvent _addEvent = null;
+        NoteEvent _noteEvent = null;
+        if(_hasAddEvent) {
+            if (_addEventType.equals("ReactEvent")) {
+                _addEvent = ReadAddEvent(_jsonEvent);
+            } else if (_addEventType.equals("NoteEvent")) {
+                _noteEvent = ReadNoteEvent(_jsonEvent);
+            }
+        }
+
+        return new Event(_titleName, _imageName, _eventText, _buttons, _isLoop, _typeEvent, _hasAddEvent, _addEventType, _addEvent, _noteEvent, _addMusic, _nameToSet);
+    }
+
+    private static NoteEvent ReadNoteEvent(JSONObject _jsonEvent) throws JSONException {
+        JSONObject _noteEventJson = _jsonEvent.getJSONObject("NoteEvent");
+        String _title = _noteEventJson.getString("Title");
+        String _description = _noteEventJson.getString("Description");
+        String _imageNoteName = _noteEventJson.getString("ImageName");
+
+        return new NoteEvent(_title, _description, _imageNoteName);
+    }
+
+    private static AdditionalEvent ReadAddEvent(JSONObject _jsonEvent) throws JSONException {
+        String[][] check = null;
+        String[][] changed = null;
+
+        JSONObject checkEvent = _jsonEvent.getJSONObject("WhatCheck");
+        JSONArray toCheck = checkEvent.getJSONArray("ToCheck");
+        JSONArray checkFor = checkEvent.getJSONArray("Params");
+        check = new String[toCheck.length()][2];
+
+        for(int z = 0;z<toCheck.length();z++){
+            String checkParam = toCheck.getString(z);
+            if(checkParam.equals("Nothing")) {
+                check = null;
+                break;
+            }
+            String checkValue = checkFor.getString(z);
+            check[z][0] = checkParam;
+            check[z][1] = checkValue;
+        }
+
+        JSONObject _addEventJson = _jsonEvent.getJSONObject("AdditionalEvent");
+        String _title = _addEventJson.getString("Title");
+        String _params = _addEventJson.getString("Params");
+        String _description = _addEventJson.getString("Description");
+
+        JSONObject reactEvent = _addEventJson.getJSONObject("ParameterReact");
+        JSONArray willChanged = reactEvent.getJSONArray("WillChanged");
+        JSONArray willChangedFor = reactEvent.getJSONArray("WillChangedFor");
+        changed = new String[willChanged.length()][2]; // [Имя][Значение] размерность одинаковая будет
+
+        for (int j = 0; j < willChanged.length(); j++) {
+            String reactParam = willChanged.getString(j);
+            if (reactParam.equals("Nothing")) {
+                changed = null;
+                break;
+            }
+            String reactValue = willChangedFor.getString(j);
+            changed[j][0] = reactParam;
+            changed[j][1] = reactValue;
+        }
+
+        String _type = _jsonEvent.getString("TypeOfAddEvent"); //Для проверки на какой ивент
+
+        return new AdditionalEvent(_title, _params, _description, _type, check, changed);
     }
 
     private static CustomButton[] ReadButton(JSONObject _jsonEvent) throws JSONException {
@@ -135,6 +239,9 @@ public class ReadJsonScene {
             JSONObject button = (JSONObject) jsonArray.get(j);
 
             _buttons[j] = ReadButtonJson(button);
+
+            if(_buttons[j] == null)
+                return null;
 
             if(button.getBoolean("HasContinue")) {
                 CustomButton[] _buttonsNew = ReadButton(button.getJSONObject("ReactionButton"));
