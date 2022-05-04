@@ -152,27 +152,47 @@ public class ReadJsonScene {
         String _titleName = _jsonEvent.getString("TitleName");
         String _imageName = _jsonEvent.getString("ImageName");
         String _eventText = _jsonEvent.getString("EventText");
+
         Boolean _isLoop = _jsonEvent.getBoolean("IsLoop");
+
         String _typeEvent = _jsonEvent.getString("EventType");
-        String _addMusic = _jsonEvent.getBoolean("HasAddMusic") ? _jsonEvent.getString("AddMusic") : null;
-        String _nameToSet = !_jsonEvent.getString("SetEvent").equals("Nothing") ? _jsonEvent.getString("SetEvent") :null;
 
         CustomButton[] _buttons =  ReadButton(_jsonEvent);
 
         boolean _hasAddEvent = _jsonEvent.getBoolean("HasAddEvent");
-        String _addEventType = _hasAddEvent ? _jsonEvent.getString("AddEventType") : null;
 
-        AdditionalEvent _addEvent = null;
-        NoteEvent _noteEvent = null;
-        if(_hasAddEvent) {
-            if (_addEventType.equals("ReactEvent")) {
-                _addEvent = ReadAddEvent(_jsonEvent);
-            } else if (_addEventType.equals("NoteEvent")) {
-                _noteEvent = ReadNoteEvent(_jsonEvent);
-            }
+        Event mEvent = new Event(_titleName, _imageName, _eventText, _buttons, _isLoop, _typeEvent, _hasAddEvent);
+
+        if(_isLoop) {
+            int _frequency = _jsonEvent.getInt("Frequency");
+            mEvent.set_frequency(_frequency);
         }
 
-        return new Event(_titleName, _imageName, _eventText, _buttons, _isLoop, _typeEvent, _hasAddEvent, _addEventType, _addEvent, _noteEvent, _addMusic, _nameToSet);
+        String _addMusic = _jsonEvent.getBoolean("HasAddMusic") ? _jsonEvent.getString("AddMusic") : null;
+        if(_addMusic != null){
+            mEvent.set_addMusicName(_addMusic);
+        }
+
+        String _nameToSet = !_jsonEvent.getString("SetEvent").equals("Nothing") ? _jsonEvent.getString("SetEvent") :null;
+        if(_nameToSet != null){
+            mEvent.set_nameEventToSet(_nameToSet);
+        }
+
+        if(_hasAddEvent){
+            String _addEventType =  _jsonEvent.getString("AddEventType");
+            mEvent.set_typeAddEvent(_addEventType);
+
+            if (_addEventType.equals("ReactEvent")) {
+                AdditionalEvent _addEvent = ReadAddEvent(_jsonEvent);
+                mEvent.set_addEvent(_addEvent);
+            } else if (_addEventType.equals("NoteEvent")) {
+                NoteEvent _noteEvent = ReadNoteEvent(_jsonEvent);
+                mEvent.set_noteEvent(_noteEvent);
+            }
+
+        }
+
+        return mEvent;
     }
 
     private static NoteEvent ReadNoteEvent(JSONObject _jsonEvent) throws JSONException {

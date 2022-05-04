@@ -293,7 +293,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         int _value = _rand.nextInt(MainActivity.chapterEvents.size());
         int _current = MainActivity.chapterEvents.indexOf(MainActivity.currentEvent);
 
-        while (_current == _value  || !CheckAdditionalEvent(MainActivity.chapterEvents.get(_value)))
+        while (_current == _value  || !CheckAdditionalEvent(MainActivity.chapterEvents.get(_value)) || !CheckFrequency(MainActivity.chapterEvents.get(_value)))
             _value = _rand.nextInt(MainActivity.chapterEvents.size());
 
 
@@ -563,6 +563,20 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     private int Roll(){
         Random _rand = new Random();
         return  _rand.nextInt(3 + 3)  - 3;
+    }
+
+    private boolean CheckFrequency(Event mEvent){
+        if(!mEvent.is_isLoop()) //Если нет frequency
+            return true;
+
+        int frequency = mEvent.get_frequency();
+
+        return FrequencyRoll()>=Math.abs(frequency-6); //Если частота меньше то шанс ролла меньше должен быть
+    }
+
+    private int FrequencyRoll(){
+        Random _rand = new Random();
+        return  _rand.nextInt(6);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

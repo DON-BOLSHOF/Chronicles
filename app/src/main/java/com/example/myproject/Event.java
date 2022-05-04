@@ -1,20 +1,21 @@
 package com.example.myproject;
 
 public class Event {
-    private String _titleName;
-    private String _imageName;
-    private String _eventText;
-    private CustomButton[] _buttons;
+    private String _titleName = null;
+    private String _imageName= null;
+    private String _eventText= null;
+    private CustomButton[] _buttons= null;
     private boolean _isLoop;
-    private String _eventType;
+    private int _frequency; //С этого момента дополнительные переменные, которые нужно проверить, не в конструктор будем записывать, а через сет делать
+    private String _eventType= null;
     private boolean _hasAddEvent;
-    private String _typeAddEvent;
-    private AdditionalEvent _addEvent;
-    private NoteEvent _noteEvent;
-    private String _addMusicName;
-    private String _nameEventToSet;
+    private String _typeAddEvent= null;
+    private AdditionalEvent _addEvent= null;
+    private NoteEvent _noteEvent= null;
+    private String _addMusicName= null;
+    private String _nameEventToSet= null;
 
-    public Event(String _titleName, String _imageName, String _eventText, CustomButton[] _buttons, boolean _isLoop, String _eventType, boolean _hasAddEvent, String _typeAddEvent, AdditionalEvent _addEvent, NoteEvent _noteEvent, String _addMusicName, String _nameEventToSet) {
+    public Event(String _titleName, String _imageName, String _eventText, CustomButton[] _buttons, boolean _isLoop, String _eventType, boolean _hasAddEvent) {
         this._titleName = _titleName;
         this._imageName = _imageName;
         this._eventText = _eventText;
@@ -22,11 +23,14 @@ public class Event {
         this._eventType = _eventType;
         this._isLoop = _isLoop;
         this._hasAddEvent = _hasAddEvent;
-        this._typeAddEvent = _typeAddEvent;
-        this._addEvent = _addEvent;
-        this._noteEvent = _noteEvent;
-        this._addMusicName = _addMusicName;
-        this._nameEventToSet = _nameEventToSet;
+    }
+
+    public int get_frequency() {
+        return _frequency;
+    }
+
+    public void set_frequency(int _frequency) {
+        this._frequency = _frequency;
     }
 
     public boolean is_hasAddEvent() {
