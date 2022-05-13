@@ -1,7 +1,10 @@
 package com.example.myproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
 import org.json.JSONException;
 
@@ -17,6 +21,7 @@ import java.io.IOException;
 public class ActionActivity extends AppCompatActivity implements FragmentSceneManager.AddMusic {
     private MediaPlayer _mPlayer;
     private Boolean _isAddMusicPlaying = false;
+    private Boolean _hasPermissionToMusic = true;
     protected static ImageView blackout;
 
     @Override
@@ -35,16 +40,20 @@ public class ActionActivity extends AppCompatActivity implements FragmentSceneMa
         try {
             ReadJsonScene.OverWriteParams(this, MainActivity.chapterEvents);
             ReadJsonHero.OverWriteParams(this, MainActivity.character);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
 
     protected void onResume() {
         super.onResume();
-        SetMainMusic();
+
+        CheckMusicPermission();
+
+        if(_hasPermissionToMusic)
+            SetMainMusic();
+
+        SetScene();
     }
 
     @Override
@@ -52,12 +61,20 @@ public class ActionActivity extends AppCompatActivity implements FragmentSceneMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_activity);
 
+        CheckMusicPermission();
+
         blackout = findViewById(R.id.BackgroundBlackout);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Set Portrait
-        getSupportActionBar().hide(); //Удалим название проекта сверху
 
-        SetScene();
+        CheckPreferences();
+    }
+
+    private void CheckMusicPermission(){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        String _accept = pref.getString("music", null);
+        _hasPermissionToMusic = _accept != null && _accept.equals("включен");
     }
 
     private void SetScene(){
@@ -74,16 +91,45 @@ public class ActionActivity extends AppCompatActivity implements FragmentSceneMa
 
     @Override
     public void SetAddMusic(String musicName){
-        int resID = getResources().getIdentifier(musicName , "raw", MainActivity.PACKAGE_NAME);
-        _mPlayer = MediaPlayer.create(this, resID);
-        _mPlayer.start();
-        _isAddMusicPlaying = true;
+        if(_hasPermissionToMusic) {
+            int resID = getResources().getIdentifier(musicName, "raw", MainActivity.PACKAGE_NAME);
+            _mPlayer = MediaPlayer.create(this, resID);
+            _mPlayer.start();
+            _isAddMusicPlaying = true;
+        }
     }
 
     @Override
     public void StopAddMusic(){
         if (_isAddMusicPlaying) { //Выключение побочных звуков запущенных игрой
             _mPlayer.pause();
+        }
+    }
+
+    private void CheckPreferences(){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        String _size = pref.getString("size", null);
+        if(_size != null){
+            Resources res = getResources();
+            Configuration configuration = new Configuration(res.getConfiguration());
+            switch (_size){
+                case "маленький":{
+                    configuration.fontScale = 0.8f;
+                    res.updateConfiguration(configuration, res.getDisplayMetrics());
+                    break;
+                }
+                case "средний":{
+                    configuration.fontScale = 1f;
+                    res.updateConfiguration(configuration, res.getDisplayMetrics());
+                    break;
+                }
+                case "большой":{
+                    configuration.fontScale = 1.2f;
+                    res.updateConfiguration(configuration, res.getDisplayMetrics());
+                    break;
+                }
+            }
         }
     }
 }

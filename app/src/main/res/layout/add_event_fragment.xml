@@ -41,7 +41,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.109"
             android:fontFamily="@font/huxtable"
-            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <Button
@@ -49,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Продолжить"
+            android:textStyle="bold"
             android:textColor="#5D4037"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +63,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/huxtable"
             android:text="Условия"
-            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +108,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/huxtable"
                 android:text="param"
-                android:textSize="20sp"
                 android:textStyle="bold" />
         </ScrollView>
 
@@ -119,7 +117,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/huxtable"
             android:text="Объяснение"
-            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

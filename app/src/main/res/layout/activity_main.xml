@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:text="Новая игра"
         android:textStyle="bold"
+
         android:textSize="20sp"
         android:fontFamily="@font/huxtable"
         android:textColor="@color/black"

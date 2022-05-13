@@ -1,5 +1,6 @@
 package com.example.myproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -11,6 +12,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -37,6 +39,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     private AdditionalEventFragment additionalEventFragment;
     private NoteEventFragment noteEventFragment;
     private AddMusic _eventMusic;
+    private ImageButton _preffButton;
 
     public FragmentSceneManager(AddMusic addMusic){
         _eventMusic = addMusic;
@@ -53,6 +56,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 container, false);
 
         InitSceneParam();
+        InitPreffButton();
         InitScene(MainActivity.currentEvent);
 
         return _view;
@@ -72,6 +76,14 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         _characterMoney =  _view.findViewById(R.id.TextMoney);
         _characterRelFather =  _view.findViewById(R.id.TextFatherRel);
         _characterPopularity =  _view.findViewById(R.id.TextPopularity);
+        _preffButton = _view.findViewById(R.id.PreffsButton);
+    }
+
+    private void InitPreffButton(){
+      _preffButton.setOnClickListener(view -> {
+          Intent mIntent = new Intent(getContext(),SettingsActivity.class);
+          startActivity(mIntent);
+      });
     }
 
     private void InitScene(Event scene){
@@ -92,6 +104,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         SetPopularity();
         SetScrollViewUP(_textScrollView);
     } // Чтобы лучше смотрелось
+
 /////////////////Music///////////////////////////////////////////////////////////////////////////////////////////////
 
     public interface AddMusic{
@@ -150,34 +163,27 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
             int finalI = i; //Android studio предложил это решение
 
-            this.buttons[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1550){
-                        return;
+            this.buttons[i].setOnClickListener(v -> {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1550){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
+                SetFogging();
+
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    SetEventReaction(buttons[finalI]);
+
+                    if(buttons[finalI].getReactionEventButtons() != null){
+                        SetScrollViewUP(_textScrollView);
+                        CustomButton[] reaction = buttons[finalI].getReactionEventButtons();
+                        SetButtons(reaction);
+                    }else {
+                        SetContinueButton();
                     }
-                    mLastClickTime = SystemClock.elapsedRealtime();
-
-                    SetFogging();
-
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            SetEventReaction(buttons[finalI]);
-
-                            if(buttons[finalI].getReactionEventButtons() != null){
-                                SetScrollViewUP(_textScrollView);
-                                CustomButton[] reaction = buttons[finalI].getReactionEventButtons();
-                                SetButtons(reaction);
-                            }else {
-                                SetContinueButton();
-                            }
-                        }
-
-                    }, 1500);
-              }
-            });
+                }, 1500);
+          });
         }
 
         for(int i=0; i<numbers; i++){
@@ -192,36 +198,30 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
         SetCreating(tempButton);
 
-        tempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1550){
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-
-                _eventMusic.StopAddMusic();
-
-                _eventButtonLayout.removeView(tempButton);
-                SetViewFogging();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        String tempEvent = MainActivity.currentEvent.get_nameEventToSet();
-                        CheckLoop(MainActivity.currentEvent); //Проверь и удали если не луп
-                        if(tempEvent != null)
-                            SetEvent(tempEvent);
-                        else {
-                            SetRandomEvent();
-                            InitScene(MainActivity.currentEvent);
-                        }
-                        SetViewCreating();
-                        SetScrollViewUP(_textScrollView);
-                    }
-                }, 1500);
+        tempButton.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1550){
+                return;
             }
+            mLastClickTime = SystemClock.elapsedRealtime();
+
+            _eventMusic.StopAddMusic();
+
+            _eventButtonLayout.removeView(tempButton);
+            SetViewFogging();
+
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                String tempEvent = MainActivity.currentEvent.get_nameEventToSet();
+                CheckLoop(MainActivity.currentEvent); //Проверь и удали если не луп
+                if(tempEvent != null)
+                    SetEvent(tempEvent);
+                else {
+                    SetRandomEvent();
+                    InitScene(MainActivity.currentEvent);
+                }
+                SetViewCreating();
+                SetScrollViewUP(_textScrollView);
+            }, 1500);
         });
     }
 
@@ -235,8 +235,8 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
         SetAnimation(animation);
 
-        for(int i = 0; i< buttons.length; i++){
-            buttons[i].startAnimation(animation);
+        for (Button button : buttons) {
+            button.startAnimation(animation);
         }
     }
 
@@ -283,8 +283,8 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         SetTitle(buttonReact.getReactTitle());
         SetUpdateParams(buttonReact.getWillChanged());
 
-        for(int i = 0; i< buttons.length; i++){
-            _eventButtonLayout.removeView(buttons[i]);
+        for (Button value : buttons) {
+            _eventButtonLayout.removeView(value);
         }
     }
 
@@ -379,30 +379,30 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
     private void SetUpdateParams(String[][] changeStats){
         if(changeStats != null){
-            for (int j = 0; j<changeStats.length; j++){
-                switch (changeStats[j][0]){
+            for (String[] changeStat : changeStats) {
+                switch (changeStat[0]) {
                     case "Money": {
-                        MainActivity.character.boostMoney(Integer.parseInt(changeStats[j][1]));
+                        MainActivity.character.boostMoney(Integer.parseInt(changeStat[1]));
                         break;
                     }
-                    case "FatherRelations":{
-                        MainActivity.character.boostFatherRel(Integer.parseInt(changeStats[j][1]));
+                    case "FatherRelations": {
+                        MainActivity.character.boostFatherRel(Integer.parseInt(changeStat[1]));
                         break;
                     }
-                    case  "Popularity":{
-                        MainActivity.character.boosPopularity(Integer.parseInt(changeStats[j][1]));
+                    case "Popularity": {
+                        MainActivity.character.boosPopularity(Integer.parseInt(changeStat[1]));
                         break;
                     }
-                    case  "FightingSkill":{
-                        MainActivity.character.boostFightSkill((Integer.parseInt(changeStats[j][1])));
+                    case "FightingSkill": {
+                        MainActivity.character.boostFightSkill((Integer.parseInt(changeStat[1])));
                         break;
                     }
-                    case  "HasEquip":{
-                        MainActivity.character.setHasEquip(Boolean.parseBoolean(changeStats[j][1]));
+                    case "HasEquip": {
+                        MainActivity.character.setHasEquip(Boolean.parseBoolean(changeStat[1]));
                         break;
                     }
-                    case  "HasHorse":{
-                        MainActivity.character.setHasHorse(Boolean.parseBoolean(changeStats[j][1]));
+                    case "HasHorse": {
+                        MainActivity.character.setHasHorse(Boolean.parseBoolean(changeStat[1]));
                         break;
                     }
                 }
@@ -441,58 +441,58 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
        boolean _isItMoneyCheck = false;
        int moneyToWindraw = 0;
 
-       for(int i = 0; i < _reactions.length; i++){
-           String _temp = _reactions[i][0];
-           switch (_temp){
-               case "Money":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getMoney();
-                   if(_myParams < _paramsToCheck){
-                       _hasPass = false;
-                   } else{
-                       _isItMoneyCheck = true;
-                       moneyToWindraw = _paramsToCheck;
-                   }
-                   break;
-               }
-               case "Popularity":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                   if(_myParams < _paramsToCheck){                              // Как в ДНД.
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "FatherRelations":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getFatherRel() + Roll();
-                   if(_myParams < _paramsToCheck){
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "FightSkills":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getFightSkill() + Roll();
-                   if(_myParams < _paramsToCheck){
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "HasEquip":{
-                   boolean _myParam = Boolean.parseBoolean(_reactions[i][1]);
-                   if(MainActivity.character.isHasEquip() != _myParam)
-                       _hasPass = false;
-                   break;
-               }
-               case "HasHorse": {
-                   boolean _myParam = Boolean.parseBoolean(_reactions[i][1]);
-                   if(MainActivity.character.isHasHorse() != _myParam)
-                       _hasPass = false;
-                   break;
-               }
-           }
-       }
+        for (String[] reaction : _reactions) {
+            String _temp = reaction[0];
+            switch (_temp) {
+                case "Money": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getMoney();
+                    if (_myParams < _paramsToCheck) {
+                        _hasPass = false;
+                    } else {
+                        _isItMoneyCheck = true;
+                        moneyToWindraw = _paramsToCheck;
+                    }
+                    break;
+                }
+                case "Popularity": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
+                    if (_myParams < _paramsToCheck) {                              // Как в ДНД.
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "FatherRelations": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getFatherRel() + Roll();
+                    if (_myParams < _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "FightSkills": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getFightSkill() + Roll();
+                    if (_myParams < _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "HasEquip": {
+                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasEquip() != _myParam)
+                        _hasPass = false;
+                    break;
+                }
+                case "HasHorse": {
+                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasHorse() != _myParam)
+                        _hasPass = false;
+                    break;
+                }
+            }
+        }
 
        if(_hasPass && _isItMoneyCheck)
            WindrowMoney(moneyToWindraw);
@@ -507,55 +507,55 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     private boolean HasPassTheRollNegative(String[][] _reactions){
        boolean _hasPass = true;
 
-       for(int i = 0; i < _reactions.length; i++){
-           String _temp = _reactions[i][0];
-           switch (_temp){
-               case "Money":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getMoney();
-                   if(_myParams > _paramsToCheck){
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "Popularity":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                   if(_myParams > _paramsToCheck){                              // Как в ДНД.
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "FatherRelations":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getFatherRel() + Roll();
-                   if(_myParams > _paramsToCheck){
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "FightSkills":{
-                   int _paramsToCheck =  Integer.parseInt(_reactions[i][1]);
-                   int _myParams = MainActivity.character.getFightSkill() + Roll();
-                   if(_myParams > _paramsToCheck){
-                       _hasPass = false;
-                   }
-                   break;
-               }
-               case "HasEquip":{
-                   boolean _myParam = Boolean.parseBoolean(_reactions[i][1]);
-                   if(MainActivity.character.isHasEquip() == _myParam)
-                       _hasPass = false;
-                   break;
-               }
-               case "HasHorse": {
-                   boolean _myParam = Boolean.parseBoolean(_reactions[i][1]);
-                   if(MainActivity.character.isHasHorse() == _myParam)
-                       _hasPass = false;
-                   break;
-               }
-           }
-       }
+        for (String[] reaction : _reactions) {
+            String _temp = reaction[0];
+            switch (_temp) {
+                case "Money": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getMoney();
+                    if (_myParams > _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "Popularity": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
+                    if (_myParams > _paramsToCheck) {                              // Как в ДНД.
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "FatherRelations": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getFatherRel() + Roll();
+                    if (_myParams > _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "FightSkills": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getFightSkill() + Roll();
+                    if (_myParams > _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "HasEquip": {
+                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasEquip() == _myParam)
+                        _hasPass = false;
+                    break;
+                }
+                case "HasHorse": {
+                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasHorse() == _myParam)
+                        _hasPass = false;
+                    break;
+                }
+            }
+        }
 
        return _hasPass;
     }
@@ -578,5 +578,5 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         Random _rand = new Random();
         return  _rand.nextInt(6);
     }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 }

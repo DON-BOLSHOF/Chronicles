@@ -2,4 +2,18 @@
     <string name="app_name">MyProject</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="settings_header">Настройки</string>
+
+    <!-- Messages Preferences -->
+    <string name="size_title">Размер шрифта</string>
+    <string name="restart_title">Сбросить прогресс</string>
+    <string name="music_title">Выключить/Выключить музыку</string>
+
+    <!-- Warning Messages -->
+    <string name="skip_warning">Вы уверены, что хотите сбросить прогресс?</string>
+    <string name="music_warning">Хотите включить или же выключить музыку?</string>
+
 </resources>

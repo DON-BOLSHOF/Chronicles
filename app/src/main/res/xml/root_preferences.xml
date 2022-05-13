@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/settings_header">
+
+        <ListPreference
+            app:defaultValue="средний"
+            app:entries="@array/size_entries"
+            app:entryValues="@array/size_values"
+            app:key="size"
+            app:title="@string/size_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:dialogTitle="@string/music_warning"
+            app:defaultValue="включен"
+            app:entries="@array/music_entries"
+            app:entryValues="@array/music_values"
+            app:key="music"
+            app:title="@string/music_title"
+            app:useSimpleSummaryProvider="true"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

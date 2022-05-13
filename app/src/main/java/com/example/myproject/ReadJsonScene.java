@@ -24,10 +24,10 @@ public class ReadJsonScene {
         // Read content of company.json
         String jsonText = ReadText(context, R.raw.sorce);
 
+        String _titles =  context.getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
+
         JSONObject _jsonRoot = new JSONObject(jsonText);
         JSONArray _jsonEvents = _jsonRoot.getJSONArray("Event");
-
-        String _titles = ReadSharedPrefTitles(context);
 
         ArrayList<Event> events = new ArrayList<Event>();
 
@@ -82,13 +82,9 @@ public class ReadJsonScene {
     }
 
     protected static String ReadSharedPrefTitles(Context context){
-        sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String _titles = context.getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
 
-        if (sharedPreferences != null) {
-            String savedText = sharedPreferences.getString(SAVED_TITLES, null);
-            return savedText;
-        }else
-            return null;
+       return _titles;
     }
 
     private static CustomButton ReadButtonJson(JSONObject button) throws  JSONException {
