@@ -7,8 +7,8 @@ public class Hero {
     private int fightSkill;
     private int shopLvl;
 
-    private boolean hasEquip = false;
-    private boolean hasHorse = false;
+    private boolean hasEquip;
+    private boolean hasHorse;
 
     public Hero(int fatherRel, int popularity, int money, int fightSkill, int shopLvl, boolean hasEquip, boolean hasHorse){
         this.fatherRel = fatherRel;

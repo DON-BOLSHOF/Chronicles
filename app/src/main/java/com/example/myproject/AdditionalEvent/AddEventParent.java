@@ -57,12 +57,9 @@ public class AddEventParent extends Fragment {
     protected void SetDestroyButton(){
         destroyButton = view.findViewById(R.id.continueButton);
 
-        destroyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(AddEventParent.this).commit();
-                events.OnDestroyAddEvent();
-            }
+        destroyButton.setOnClickListener(view -> {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(AddEventParent.this).commit();
+            events.OnDestroyAddEvent();
         });
     }
 }

@@ -4,13 +4,13 @@ import com.example.myproject.AdditionalEvent.AdditionalEvent;
 import com.example.myproject.AdditionalEvent.NoteEvent;
 
 public class Event {
-    private String _titleName = null;
-    private String _imageName= null;
-    private String _eventText= null;
-    private CustomButton[] _buttons= null;
+    private String _titleName;
+    private String _imageName;
+    private String _eventText;
+    private CustomButton[] _buttons;
     private boolean _isLoop;
     private int _frequency; //С этого момента дополнительные переменные, которые нужно проверить, не в конструктор будем записывать, а через сет делать
-    private String _eventType= null;
+    private String _eventType;
     private boolean _hasAddEvent;
     private String _typeAddEvent= null;
     private AdditionalEvent _addEvent= null;
