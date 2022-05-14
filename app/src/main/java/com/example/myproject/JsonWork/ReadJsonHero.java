@@ -1,9 +1,12 @@
-package com.example.myproject;
+package com.example.myproject.JsonWork;
 
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.example.myproject.SubClasses.Hero;
+import com.example.myproject.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

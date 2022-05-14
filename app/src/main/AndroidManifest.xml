@@ -10,17 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyProject">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings" />
 
         <service
-            android:name=".MusicService"
+            android:name=".MusicServices.MusicService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActionActivity"
+            android:name=".MainActivities.ActionActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

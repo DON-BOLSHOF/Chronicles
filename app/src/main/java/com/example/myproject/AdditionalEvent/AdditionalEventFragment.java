@@ -1,16 +1,13 @@
-package com.example.myproject;
+package com.example.myproject.AdditionalEvent;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.myproject.R;
 
 public class AdditionalEventFragment extends AddEventParent {
     private TextView params;

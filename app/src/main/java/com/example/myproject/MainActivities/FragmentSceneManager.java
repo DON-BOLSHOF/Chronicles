@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.MainActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.myproject.AdditionalEvent.AddEventParent;
+import com.example.myproject.AdditionalEvent.AdditionalEvent;
+import com.example.myproject.AdditionalEvent.AdditionalEventFragment;
+import com.example.myproject.AdditionalEvent.NoteEvent;
+import com.example.myproject.AdditionalEvent.NoteEventFragment;
+import com.example.myproject.R;
+import com.example.myproject.Settings.SettingsActivity;
+import com.example.myproject.SubClasses.CustomButton;
+import com.example.myproject.SubClasses.Event;
+import com.example.myproject.SubClasses.Reaction;
 
 import java.util.Random;
 
@@ -81,7 +92,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
     private void InitPreffButton(){
       _preffButton.setOnClickListener(view -> {
-          Intent mIntent = new Intent(getContext(),SettingsActivity.class);
+          Intent mIntent = new Intent(getContext(), SettingsActivity.class);
           startActivity(mIntent);
       });
     }

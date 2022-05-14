@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.MainActivities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +13,11 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
+
+import com.example.myproject.JsonWork.ReadJsonHero;
+import com.example.myproject.JsonWork.ReadJsonScene;
+import com.example.myproject.MusicServices.MusicService;
+import com.example.myproject.R;
 
 import org.json.JSONException;
 

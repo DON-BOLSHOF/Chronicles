@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.SubClasses;
 
 public class Reaction {
     private String reactTitle;

@@ -1,10 +1,13 @@
-package com.example.myproject;
+package com.example.myproject.AdditionalEvent;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.example.myproject.MainActivities.MainActivity;
+import com.example.myproject.R;
 
 public class NoteEventFragment  extends  AddEventParent{
     private ImageView noteImage;

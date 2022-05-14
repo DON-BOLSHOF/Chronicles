@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.AdditionalEvent;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.myproject.R;
 
 public class AddEventParent extends Fragment {
     protected Animation eventAnimation;

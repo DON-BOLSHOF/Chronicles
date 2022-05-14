@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.SubClasses;
 
 public class Hero {
     private int fatherRel;

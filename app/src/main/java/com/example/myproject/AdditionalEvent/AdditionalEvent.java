@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.AdditionalEvent;
 
 public class AdditionalEvent {
     private String title;

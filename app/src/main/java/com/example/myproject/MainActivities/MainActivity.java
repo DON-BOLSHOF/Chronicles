@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.MainActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,12 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.myproject.JsonWork.ReadJsonHero;
+import com.example.myproject.JsonWork.ReadJsonScene;
+import com.example.myproject.R;
+import com.example.myproject.SubClasses.Event;
+import com.example.myproject.SubClasses.Hero;
 
 import org.json.JSONException;
 

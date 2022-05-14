@@ -1,4 +1,4 @@
-package com.example.myproject;
+package com.example.myproject.Settings;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+
+import com.example.myproject.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

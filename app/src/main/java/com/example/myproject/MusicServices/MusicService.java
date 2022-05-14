@@ -1,10 +1,12 @@
-package com.example.myproject;
+package com.example.myproject.MusicServices;
 
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
+
+import com.example.myproject.R;
 
 public class MusicService extends Service {
     private MediaPlayer _mPlayer;

@@ -1,9 +1,16 @@
-package com.example.myproject;
+package com.example.myproject.JsonWork;
 
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.example.myproject.AdditionalEvent.AdditionalEvent;
+import com.example.myproject.SubClasses.CustomButton;
+import com.example.myproject.SubClasses.Event;
+import com.example.myproject.AdditionalEvent.NoteEvent;
+import com.example.myproject.R;
+import com.example.myproject.SubClasses.Reaction;
 
 import org.json.JSONArray;
 import org.json.JSONException;

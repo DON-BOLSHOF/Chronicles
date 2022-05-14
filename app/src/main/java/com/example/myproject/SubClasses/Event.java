@@ -1,4 +1,7 @@
-package com.example.myproject;
+package com.example.myproject.SubClasses;
+
+import com.example.myproject.AdditionalEvent.AdditionalEvent;
+import com.example.myproject.AdditionalEvent.NoteEvent;
 
 public class Event {
     private String _titleName = null;
