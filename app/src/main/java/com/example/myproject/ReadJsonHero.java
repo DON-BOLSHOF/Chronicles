@@ -44,6 +44,7 @@ public class ReadJsonHero {
             _inputHero.put("Popularity", hero.getPopularity());
             _inputHero.put("Money", hero.getMoney());
             _inputHero.put("FightSkills", hero.getFightSkill());
+            _inputHero.put("ShopLvl", hero.getShopLvl());
             _inputHero.put("HasEquip", hero.isHasEquip());
             _inputHero.put("HasHorse", hero.isHasHorse());
         } catch (JSONException e) {
@@ -73,10 +74,11 @@ public class ReadJsonHero {
         int popularity = _jsonHero.getInt("Popularity");
         int money = _jsonHero.getInt("Money");
         int fightSkill = _jsonHero.getInt("FightSkills");
+        int shopLvl = _jsonHero.getInt("ShopLvl");
         boolean hasEquip = _jsonHero.getBoolean("HasEquip");
         boolean HasHorse = _jsonHero.getBoolean("HasHorse");
 
-        Hero mHero = new Hero(fatherRel, popularity, money, fightSkill,hasEquip,HasHorse);
+        Hero mHero = new Hero(fatherRel, popularity, money, fightSkill, shopLvl,hasEquip,HasHorse);
         return  mHero;
     }
 
@@ -105,10 +107,11 @@ public class ReadJsonHero {
         int _money = _jsonRoot.getInt("Money");
         int _popularity = _jsonRoot.getInt("Popularity");
         int _fightSkill = _jsonRoot.getInt("FightSkills");
+        int shopLvl = _jsonRoot.getInt("ShopLvl");
         boolean hasEquip = _jsonRoot.getBoolean("HasEquip");
         boolean HasHorse = _jsonRoot.getBoolean("HasHorse");
 
-        Hero _hero = new Hero(_fatherRel, _popularity, _money, _fightSkill,hasEquip,HasHorse);
+        Hero _hero = new Hero(_fatherRel, _popularity, _money, _fightSkill, shopLvl,hasEquip,HasHorse);
 
         return _hero;
     }

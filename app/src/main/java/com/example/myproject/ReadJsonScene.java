@@ -81,12 +81,6 @@ public class ReadJsonScene {
         }
     }
 
-    protected static String ReadSharedPrefTitles(Context context){
-        String _titles = context.getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
-
-       return _titles;
-    }
-
     private static CustomButton ReadButtonJson(JSONObject button) throws  JSONException {
         String[][] check = null;
         Reaction[] reactions = null;
@@ -154,6 +148,9 @@ public class ReadJsonScene {
         String _typeEvent = _jsonEvent.getString("EventType");
 
         CustomButton[] _buttons =  ReadButton(_jsonEvent);
+        if(_buttons != null) {
+            _eventText = RequiredParameters(_buttons[0].getToCheck(), _eventText);
+        }
 
         boolean _hasAddEvent = _jsonEvent.getBoolean("HasAddEvent");
 
@@ -189,6 +186,34 @@ public class ReadJsonScene {
         }
 
         return mEvent;
+    }
+
+    private static String RequiredParameters(String[][] _toCheckAnnotation , String _eventText) {
+        if (_toCheckAnnotation != null) {
+            _eventText += "\n\nТребуется:\n";
+            for (int i = 0; i < _toCheckAnnotation.length; i++) {
+                if(_toCheckAnnotation[i][0].equals("Money")){
+                    _eventText += String.format("%s: %s.\n", "Грошей", _toCheckAnnotation[i][1]);
+                }
+
+                if(_toCheckAnnotation[i][0].equals("Popularity")){
+                    _eventText +="Быть достаточно популярным.\n";
+                }
+
+                if(_toCheckAnnotation[i][0].equals("FatherRelations")){
+                    _eventText += "Ладить с отцом\n";
+                }
+
+                if(_toCheckAnnotation[i][0].equals("FightingSkill")){
+                    _eventText += String.format("%s: %s.\n", "Хорошо обращаться с мечом", _toCheckAnnotation[i][1]);
+                }
+
+                if(_toCheckAnnotation[i][0].equals("Random")){
+                    _eventText += "Подбросить кубик";
+                }
+            }
+        }
+        return  _eventText;
     }
 
     private static NoteEvent ReadNoteEvent(JSONObject _jsonEvent) throws JSONException {
@@ -251,17 +276,24 @@ public class ReadJsonScene {
         JSONArray jsonArray = _jsonEvent.getJSONArray("Buttons");
         CustomButton[] _buttons = new CustomButton[jsonArray.length()];
 
-        for (int j = 0; j < jsonArray.length(); j++) {
-            JSONObject button = (JSONObject) jsonArray.get(j);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject button = (JSONObject) jsonArray.get(i);
 
-            _buttons[j] = ReadButtonJson(button);
+            _buttons[i] = ReadButtonJson(button);
 
-            if(_buttons[j] == null)
+            if(_buttons[i] == null)
                 return null;
 
-            if(button.getBoolean("HasContinue")) {
-                CustomButton[] _buttonsNew = ReadButton(button.getJSONObject("ReactionButton"));
-                _buttons[j].setReactionEventButtons(_buttonsNew);
+            if(button.getBoolean("HasContinue")) { //Настраиваем кнопки для ивента-реакции
+                JSONArray reactionJSON = button.getJSONArray("EventReaction");
+                CustomButton[][] _buttonsNew = new CustomButton[reactionJSON.length()][];
+                for (int j = 0;j<reactionJSON.length();j++) {
+                    JSONObject reaction = (JSONObject) reactionJSON.get(j);
+                    JSONObject reactButtonsJson = reaction.getJSONObject("ReactionButton");
+                    _buttonsNew[j] = ReadButton(reactButtonsJson);
+                }
+
+                _buttons[i].setReactionEventButtons(_buttonsNew);
             }
         }
 

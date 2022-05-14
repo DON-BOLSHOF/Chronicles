@@ -5,20 +5,28 @@ public class Hero {
     private int popularity; //Некоторые негативные ивенты будут запускаться допом
     private int money;
     private int fightSkill;
+    private int shopLvl;
 
     private boolean hasEquip = false;
     private boolean hasHorse = false;
 
-    public Hero(int fatherRel, int popularity, int money, int fightSkill, boolean hasEquip, boolean hasHorse){
+    public Hero(int fatherRel, int popularity, int money, int fightSkill, int shopLvl, boolean hasEquip, boolean hasHorse){
         this.fatherRel = fatherRel;
         this.popularity = popularity;
         this.money = money;
         this.fightSkill = fightSkill;
+        this.shopLvl = shopLvl;
         this.hasEquip = hasEquip;
         this.hasHorse = hasHorse;
     }
 
+    public int getShopLvl() {
+        return shopLvl;
+    }
 
+    public void setShopLvl(int shopLvl) {
+        this.shopLvl = shopLvl;
+    }
 
     public boolean isHasEquip() {
         return hasEquip;
@@ -86,4 +94,9 @@ public class Hero {
     public void boostFightSkill(int fightSkill){
         this.fightSkill += fightSkill;
     }
+
+    public void boostShopLvl(int shopLvl){
+        this.shopLvl += shopLvl;
+    }
+
 }

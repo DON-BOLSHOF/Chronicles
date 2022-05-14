@@ -4,13 +4,13 @@ public class CustomButton {
     private String name;
     private Reaction[] reaction;
     private String[][] toCheck;
-    private CustomButton[] reactionEventButtons;
+    private CustomButton[][] reactionEventButtons;
 
-    public CustomButton[] getReactionEventButtons() {
+    public CustomButton[][] getReactionEventButtons() {
         return reactionEventButtons;
     }
 
-    public void setReactionEventButtons(CustomButton[] reactionEventButtons) {
+    public void setReactionEventButtons(CustomButton[][] reactionEventButtons) {
         this.reactionEventButtons = reactionEventButtons;
     }
 

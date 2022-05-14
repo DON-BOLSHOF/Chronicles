@@ -34,7 +34,7 @@
     "HasAddMusic" : "False",
     "Buttons": [
       {
-        "ButtonName": "Помочь конюху.",
+        "ButtonName": "Помочь конюху",
         "HasContinue" : "False",
 
         "WhatCheck": {
@@ -98,7 +98,7 @@
       "HasAddMusic" : "False",
       "Buttons": [
         {
-          "ButtonName": "Войти в крипту.",
+          "ButtonName": "Войти в крипту",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -123,7 +123,7 @@
           }]
         },
         {
-          "ButtonName": "Не входить в крипту.",
+          "ButtonName": "Не входить в крипту",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -243,7 +243,7 @@
       "HasAddMusic" : "False",
       "Buttons": [
         {
-          "ButtonName": "Подстрелить зайца из лука.",
+          "ButtonName": "Подстрелить зайца из лука",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -268,7 +268,7 @@
           }]
         },
         {
-          "ButtonName": "Отпустить зайца.",
+          "ButtonName": "Отпустить зайца",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -293,7 +293,7 @@
           }]
         },
         {
-          "ButtonName": "Дать брату подстрелить зайца.",
+          "ButtonName": "Дать брату подстрелить зайца",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -350,7 +350,7 @@
           },
           "EventReaction": [{
             "Title": "Выбор задания",
-            "ReactionText": "С горящими глазами ты явился к отцу с готовностью выполнить любое его поручение. Ухмыльнувшись, отец предложил тебе несколько заданий. Он явно оценил твой порыв, но как же проявить себя?",
+            "ReactionText": "С горящими глазами ты явился к отцу с готовностью выполнить любое его поручение. Ухмыльнувшись, отец предложил тебе несколько заданий. Он явно оценил твой порыв, но как же проявить себя?\n\nЧтобы разобраться с бандитами нужно минимум 4 раза посетить уроки фехтования, а также щепотка везения.",
             "ParameterReact": {
               "WillChanged": [
                 "Nothing"
@@ -358,78 +358,80 @@
               "WillChangedFor": [
                 "Nothing"
               ]
-            }
-          }],
-          "ReactionButton": {
-            "Buttons": [
-              {
-                "ButtonName": "Донести депешу",
-                "HasContinue": "False",
+            },
+            "ReactionButton": {
+              "Buttons": [
+                {
+                  "ButtonName": "Донести депешу",
+                  "HasContinue": "False",
 
-                "WhatCheck": {
-                  "ToCheck":[
-                    "Nothing"
-                  ],
-                  "Params": [
-                    "Nothing"
-                  ]
-                },
-                "EventReaction": [{
-                  "Title": "Ты выполнил задачу отца",
-                  "ReactionText": "Непыльная работенка выполнена, а пара монет уже звенит в твоём кармане. День определенно удался",
-                  "ParameterReact": {
-                    "WillChanged": [
-                      "Money"
+                  "WhatCheck": {
+                    "ToCheck":[
+                      "Nothing"
                     ],
-                    "WillChangedFor": [
-                      "2"
+                    "Params": [
+                      "Nothing"
                     ]
-                  }
-                }]
-              },
-              {
-                "ButtonName": "Разобраться с бандитами",
-                "HasContinue": "False",
-
-                "WhatCheck": {
-                  "ToCheck":[
-                    "FightSkills"
-                  ],
-                  "Params": [
-                    "4"
-                  ]
+                  },
+                  "EventReaction": [{
+                    "Title": "Ты выполнил задачу отца",
+                    "ReactionText": "Непыльная работенка выполнена, а пара монет уже звенит в твоём кармане. День определенно удался",
+                    "ParameterReact": {
+                      "WillChanged": [
+                        "Money"
+                      ],
+                      "WillChangedFor": [
+                        "2"
+                      ]
+                    }
+                  }]
                 },
-                "EventReaction": [{
-                  "Title": "Ты выполнил задачу отца",
-                  "ReactionText": "Выделив группу стражи, отец отправил тебя разобраться с бандитами Красного Билли. Отпетые, безжалостные ублюдки, славящиеся своей жестокостью, не должны знать пощады. Ты покончил с ними, город вздохнул спокойно, а нажитое разбойниками стало твоим...\n День определенно удался",
-                  "ParameterReact": {
-                    "WillChanged": [
-                      "Money",
-                      "Popularity"
+                {
+                  "ButtonName": "Разобраться с бандитами",
+                  "HasContinue": "False",
+
+                  "WhatCheck": {
+                    "ToCheck":[
+                      "FightSkills",
+                      "Random"
                     ],
-                    "WillChangedFor": [
+                    "Params": [
                       "4",
                       "1"
                     ]
-                  }
-                },
-                  {
-                  "Title": "Провал",
-                  "ReactionText": "Выделив группу стражи, отец отправил тебя разобраться с бандитами Красного Билли. Прибыв на место, ты с остервенением вступил в бой. Хотя ты и с легкостью заколол ушкуйника, но не заметил, как отдалился от стражи отца и уже оказался в окружении разбойников...\n\n Удар по колену вывел тебя из равновесия и ты упал...\n\n Хвала Нишиде стража уже была на месте и спасла тебя, но раздробленный строй и численное меньшинство не позволят тебе победить... Бой проигран. Cтража пробивает путь к выходу и позволяет вам уйти.\n\n Упивающиеся своёй победой разбойники обнаглели еще больше. Народ недоволен, отец, впрочем, тоже.",
-                  "ParameterReact": {
-                    "WillChanged": [
-                      "Popularity",
-                      "FatherRelations"
-                    ],
-                    "WillChangedFor": [
-                      "-2",
-                      "-1"
-                    ]
-                  }
-                }]
-              }
-            ]
-          }
+                  },
+                  "EventReaction": [{
+                    "Title": "Ты выполнил задачу отца",
+                    "ReactionText": "Выделив группу стражи, отец отправил тебя разобраться с бандитами Красного Билли. Отпетые, безжалостные ублюдки, славящиеся своей жестокостью, не должны знать пощады. Ты покончил с ними, город вздохнул спокойно, а нажитое разбойниками стало твоим...\n День определенно удался",
+                    "ParameterReact": {
+                      "WillChanged": [
+                        "Money",
+                        "Popularity"
+                      ],
+                      "WillChangedFor": [
+                        "4",
+                        "1"
+                      ]
+                    }
+                  },
+                    {
+                      "Title": "Провал",
+                      "ReactionText": "Выделив группу стражи, отец отправил тебя разобраться с бандитами Красного Билли. Прибыв на место, ты с остервенением вступил в бой. Хотя ты и с легкостью заколол ушкуйника, но не заметил, как отдалился от стражи отца и уже оказался в окружении разбойников...\n\n Удар по колену вывел тебя из равновесия и ты упал...\n\n Хвала Нишиде стража уже была на месте и спасла тебя, но раздробленный строй и численное меньшинство не позволят тебе победить... Бой проигран. Cтража пробивает путь к выходу и позволяет вам уйти.\n\n Упивающиеся своёй победой разбойники обнаглели еще больше. Народ недоволен, отец, впрочем, тоже.",
+                      "ParameterReact": {
+                        "WillChanged": [
+                          "Popularity",
+                          "FatherRelations"
+                        ],
+                        "WillChangedFor": [
+                          "-2",
+                          "-1"
+                        ]
+                      }
+                    }]
+                }
+              ]
+            }
+          }]
         },
         {
           "ButtonName": "Отказаться",
@@ -595,7 +597,7 @@
       "HasAddMusic" : "False",
       "Buttons": [
         {
-          "ButtonName": "Заказать новый доспех.",
+          "ButtonName": "Заказать новый доспех",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -758,7 +760,7 @@
 
       "Buttons": [
         {
-          "ButtonName": "В путь.",
+          "ButtonName": "В путь",
           "HasContinue" : "True",
 
           "WhatCheck": {
@@ -779,41 +781,41 @@
               "WillChangedFor": [
                 "Nothing"
               ]
-            }
-          }],
-          "ReactionButton": {
-            "Buttons": [
-              {
-                "ButtonName": "Продолжить.",
-                "HasContinue": "False",
-                "WhatCheck": {
-                  "ToCheck": [
-                    "Nothing"
-                  ],
-                  "Params": [
-                    "Nothing"
-                  ]
-                },
-                "EventReaction": [
-                  {
-                    "Title": "Итоги.",
-                    "ReactionText": "Здесь будут подведены итоги главы и взависимости от кол-во итогов будут вложенности",
-                    "ParameterReact": {
-                      "WillChanged": [
-                        "Nothing"
-                      ],
-                      "WillChangedFor": [
-                        "Nothing"
-                      ]
+            },
+            "ReactionButton": {
+              "Buttons": [
+                {
+                  "ButtonName": "Продолжить",
+                  "HasContinue": "False",
+                  "WhatCheck": {
+                    "ToCheck": [
+                      "Nothing"
+                    ],
+                    "Params": [
+                      "Nothing"
+                    ]
+                  },
+                  "EventReaction": [
+                    {
+                      "Title": "Итоги.",
+                      "ReactionText": "Здесь будут подведены итоги главы и взависимости от кол-во итогов будут вложенности",
+                      "ParameterReact": {
+                        "WillChanged": [
+                          "Nothing"
+                        ],
+                        "WillChangedFor": [
+                          "Nothing"
+                        ]
+                      }
                     }
-                  }
-                ]
-              }
-            ]
-          }
+                  ]
+                }
+              ]
+            }
+          }]
         },
         {
-          "ButtonName": "Еще не время.",
+          "ButtonName": "Еще не время",
           "HasContinue" : "False",
 
           "WhatCheck": {
@@ -868,6 +870,263 @@
       },
 
       "TypeOfAddEvent" : "Positive",
+      "SetEvent" : "Nothing"
+    },
+    {
+      "TitleName": "Рынок",
+      "ImageName": "market",
+      "EventText": "Жар весь воздух выел. Намечался самый обычный день начала лета на юге королевства. Многим твой дом казался раем, где крепостные, чтобы не спечься, с двенадцати до двух не выходили в поля, а вкуснейшие сорта винограда и пшена созревали два раза в год! Потому межевые рыцари и купцы с дальних земель постоянно съезжались сюда, и что-что, а базар здесь никогда не простаивал. Гул мелких лавочников и вечные перекрикивания были свойственны этому месту, огонь жизни чувствовался здесь как нигде иначе. Как раз сегодня сюда съехалось множество людей с окрестных деревень и не только.\nСтоит ли зайти?",
+
+      "IsLoop" : "True",
+      "Frequency" : "4",
+
+      "EventType" : "ActionEvent",
+
+      "HasAddMusic" : "True",
+      "AddMusic" : "castlestreet",
+
+
+      "Buttons": [
+        {
+          "ButtonName": "Зайти",
+          "HasContinue" : "True",
+
+          "WhatCheck": {
+            "ToCheck":[
+              "Random"
+            ],
+            "Params": [
+              "2"
+            ]
+          },
+          "EventReaction": [{
+            "Title": "Попрошайка",
+            "ReactionText": "Как только ты зашел на базар твой глаз сразу заприметил юнца в ободранной льняной рубахе и изношенных штанах. Вселенская печаль и обреченность читались в его юных глазах. Увидев твой взгляд, он скорбно сказал:\n\n-Дяденька, дайте пару грошиков.\n\nДать юнцу грошей?\n\nНужно 2 грошика.",
+            "ParameterReact": {
+              "WillChanged": [
+                "Nothing"
+              ],
+              "WillChangedFor": [
+                "Nothing"
+              ]
+            },
+            "ReactionButton": {
+              "Buttons": [
+                {
+                  "ButtonName": "Дать грошей",
+                  "HasContinue": "False",
+
+                  "WhatCheck": {
+                    "ToCheck":[
+                      "Money"
+                    ],
+                    "Params": [
+                      "2"
+                    ]
+                  },
+                  "EventReaction": [{
+                    "Title": "Ты сама щедрость",
+                    "ReactionText": "\n-Спасибо, дяденька, большой спасибо.\n\nТвоя щедрость отразилась радостью в глазах мальчонки. Хороший поступок, думаю, люди это запомнят.",
+                    "ParameterReact": {
+                      "WillChanged": [
+                        "Popularity"
+                      ],
+                      "WillChangedFor": [
+                        "1"
+                      ]
+                    },
+                    "ReactionButton": {
+                      "Buttons": [
+                        {
+                          "ButtonName": "Nothing"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "Title": "Не хватает грошей",
+                    "ReactionText": "Запустив руку в карман, ты пытаешься найти хотя бы пару грошей, но как бы ты ни искал у тебя их нет. Извинившись, ты быстрым шагом ушел прочь с базара. Пара печальных глаз провожала твой побег...  ",
+                    "ParameterReact": {
+                      "WillChanged": [
+                        "Nothing"
+                      ],
+                      "WillChangedFor": [
+                        "Nothing"
+                      ]
+                    },
+                    "ReactionButton": {
+                      "Buttons": [
+                        {
+                          "ButtonName": "Nothing"
+                        }
+                      ]
+                    }
+                  }]
+                },
+                {
+                  "ButtonName": "Тебе не до него",
+                  "HasContinue": "False",
+
+                  "WhatCheck": {
+                    "ToCheck":[
+                      "Nothing"
+                    ],
+                    "Params": [
+                      "Nothing"
+                    ]
+                  },
+                  "EventReaction": [{
+                    "Title": "Тебе не до него",
+                    "ReactionText": "Выругавшись, ты гневным взглядом пригвоздил юнца к земле. Хотел бы ты высказать этой челяди, что ты думаешь о нем, но у тебя нет на это времени, да и отец не одобрил бы это. Быстрым шагом ты ушел. Вот ведь чернь, умеет испортить настроение...",
+                    "ParameterReact": {
+                      "WillChanged": [
+                        "Nothing"
+                      ],
+                      "WillChangedFor": [
+                        "Nothing"
+                      ]
+                    },
+                    "ReactionButton": {
+                      "Buttons": [
+                        {
+                          "ButtonName": "Nothing"
+                        }
+                      ]
+                    }
+                  }]
+                }
+              ]
+            }
+          },
+            {
+              "Title": "Своё дело",
+              "ReactionText": "tt\n\nНужно 5 грошей на каждое обновление.",
+              "ParameterReact": {
+                "WillChanged": [
+                  "ShopLvl"
+                ],
+                "WillChangedFor": [
+                  "0"
+                ]
+              },
+              "ReactionButton": {
+                "Buttons": [
+                  {
+                    "ButtonName": "Заняться своей лавочкой",
+                    "HasContinue": "False",
+
+                    "WhatCheck": {
+                      "ToCheck":[
+                        "Money"
+                      ],
+                      "Params": [
+                        "5"
+                      ]
+                    },
+                    "EventReaction": [{
+                      "Title": "Вклад в будущее",
+                      "ReactionText": "",
+                      "ParameterReact": {
+                        "WillChanged": [
+                          "ShopLvl"
+                        ],
+                        "WillChangedFor": [
+                          "1"
+                        ]
+                      },
+                      "ReactionButton": {
+                        "Buttons": [
+                          {
+                            "ButtonName": "Nothing"
+                          }
+                        ]
+                      }
+                    },
+                      {
+                        "Title": "Не хватает грошей",
+                        "ReactionText": "",
+                        "ParameterReact": {
+                          "WillChanged": [
+                            "Nothing"
+                          ],
+                          "WillChangedFor": [
+                            "Nothing"
+                          ]
+                        },
+                        "ReactionButton": {
+                          "Buttons": [
+                            {
+                              "ButtonName": "Nothing"
+                            }
+                          ]
+                        }
+                      }]
+                  },
+                  {
+                    "ButtonName": "Пока не до этого",
+                    "HasContinue": "False",
+
+                    "WhatCheck": {
+                      "ToCheck":[
+                        "Nothing"
+                      ],
+                      "Params": [
+                        "Nothing"
+                      ]
+                    },
+                    "EventReaction": [{
+                      "Title": "",
+                      "ReactionText": "",
+                      "ParameterReact": {
+                        "WillChanged": [
+                          "Nothing"
+                        ],
+                        "WillChangedFor": [
+                          "Nothing"
+                        ]
+                      },
+                      "ReactionButton": {
+                        "Buttons": [
+                          {
+                            "ButtonName": "Nothing"
+                          }
+                        ]
+                      }
+                    }]
+                  }
+                ]
+              }
+            }]
+        },
+        {
+          "ButtonName": "Уйти",
+          "HasContinue" : "False",
+
+          "WhatCheck": {
+            "ToCheck":[
+              "Nothing"
+            ],
+            "Params": [
+              "Nothing"
+            ]
+          },
+          "EventReaction": [{
+            "Title": "Ты покинул рынок",
+            "ReactionText": "Шум и гам городских площадей явно не для тебя...\nТы ушел по своим делам.",
+            "ParameterReact": {
+              "WillChanged": [
+                "Nothing"
+              ],
+              "WillChangedFor": [
+                "Nothing"
+              ]
+            }
+          }]
+        }
+      ],
+
+      "HasAddEvent" : "False",
+
       "SetEvent" : "Nothing"
     }
   ]

@@ -3,6 +3,7 @@
   "Popularity": 0,
   "Money": 4,
   "FightSkills": 0,
+  "ShopLvl": 0,
   "HasHorse" : "False",
   "HasEquip" : "False"
 }

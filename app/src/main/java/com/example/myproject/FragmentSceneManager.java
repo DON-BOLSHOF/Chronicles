@@ -174,20 +174,12 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
                     SetEventReaction(buttons[finalI]);
-
-                    if(buttons[finalI].getReactionEventButtons() != null){
-                        SetScrollViewUP(_textScrollView);
-                        CustomButton[] reaction = buttons[finalI].getReactionEventButtons();
-                        SetButtons(reaction);
-                    }else {
-                        SetContinueButton();
-                    }
                 }, 1500);
           });
         }
 
         for(int i=0; i<numbers; i++){
-            _eventButtonLayout.addView(this.buttons[i], i);
+            SetCreating(this.buttons[i]);
         }
 
     }
@@ -267,25 +259,46 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         SetNonImage();
         Reaction buttonReact;
 
+        for (Button value : buttons) {
+            _eventButtonLayout.removeView(value);
+        }
+
+        if(button.getReactionEventButtons() == null)
+            SetContinueButton();
+
+        CustomButton[] reaction = null;
+
         if(button.getToCheck() != null)
             if (HasPassTheRollPositive(button.getToCheck())) {
                 buttonReact = button.getReaction()[0];
+
                 if(MainActivity.currentEvent.get_eventType().equals("StoryEvent"))
                     MainActivity.currentEvent.set_isLoop(false);
+
+                if(button.getReactionEventButtons() != null){
+                    reaction = button.getReactionEventButtons()[0];
+                }
             }
-            else
+            else{
                 buttonReact = button.getReaction()[1];
-        else
+                if(button.getReactionEventButtons() != null) {
+                reaction = button.getReactionEventButtons()[1];
+             }
+        }
+        else {
             buttonReact = button.getReaction()[0];
+            if (button.getReactionEventButtons() != null) {
+                reaction = button.getReactionEventButtons()[0];
+            }
+        }
+
+        if (reaction != null)
+            SetButtons(reaction);
 
         SetEventText(buttonReact.getReactionText());
         SetScrollViewUP(_textScrollView);
         SetTitle(buttonReact.getReactTitle());
         SetUpdateParams(buttonReact.getWillChanged());
-
-        for (Button value : buttons) {
-            _eventButtonLayout.removeView(value);
-        }
     }
 
     private void SetRandomEvent(){
@@ -397,6 +410,13 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                         MainActivity.character.boostFightSkill((Integer.parseInt(changeStat[1])));
                         break;
                     }
+                    case "ShopLvl": {
+                        MainActivity.character.boostShopLvl((Integer.parseInt(changeStat[1])));
+
+                        if(Integer.parseInt(changeStat[1]) == 0) //Самый худший костыль, из всех, но в силу архитектуры чтения json-файла придется использовать это
+                            MainActivity.character.boostMoney(MainActivity.character.getShopLvl() * 2);
+                        break;
+                    }
                     case "HasEquip": {
                         MainActivity.character.setHasEquip(Boolean.parseBoolean(changeStat[1]));
                         break;
@@ -465,7 +485,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 }
                 case "FatherRelations": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFatherRel() + Roll();
+                    int _myParams = MainActivity.character.getFatherRel();
                     if (_myParams < _paramsToCheck) {
                         _hasPass = false;
                     }
@@ -473,7 +493,15 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 }
                 case "FightSkills": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFightSkill() + Roll();
+                    int _myParams = MainActivity.character.getFightSkill();
+                    if (_myParams < _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "ShopLvl": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getShopLvl();
                     if (_myParams < _paramsToCheck) {
                         _hasPass = false;
                     }
@@ -488,6 +516,12 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "HasHorse": {
                     boolean _myParam = Boolean.parseBoolean(reaction[1]);
                     if (MainActivity.character.isHasHorse() != _myParam)
+                        _hasPass = false;
+                    break;
+                }
+                case "Random": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    if(Roll() < _paramsToCheck)
                         _hasPass = false;
                     break;
                 }
@@ -528,7 +562,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 }
                 case "FatherRelations": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFatherRel() + Roll();
+                    int _myParams = MainActivity.character.getFatherRel();
                     if (_myParams > _paramsToCheck) {
                         _hasPass = false;
                     }
@@ -536,7 +570,15 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 }
                 case "FightSkills": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFightSkill() + Roll();
+                    int _myParams = MainActivity.character.getFightSkill();
+                    if (_myParams > _paramsToCheck) {
+                        _hasPass = false;
+                    }
+                    break;
+                }
+                case "ShopLvl": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    int _myParams = MainActivity.character.getShopLvl();
                     if (_myParams > _paramsToCheck) {
                         _hasPass = false;
                     }
@@ -551,6 +593,12 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "HasHorse": {
                     boolean _myParam = Boolean.parseBoolean(reaction[1]);
                     if (MainActivity.character.isHasHorse() == _myParam)
+                        _hasPass = false;
+                    break;
+                }
+                case "Random": {
+                    int _paramsToCheck = Integer.parseInt(reaction[1]);
+                    if(Roll() >= _paramsToCheck)
                         _hasPass = false;
                     break;
                 }
