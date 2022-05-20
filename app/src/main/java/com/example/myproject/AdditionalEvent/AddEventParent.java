@@ -60,6 +60,7 @@ public class AddEventParent extends Fragment {
         destroyButton.setOnClickListener(view -> {
             getActivity().getSupportFragmentManager().beginTransaction().remove(AddEventParent.this).commit();
             events.OnDestroyAddEvent();
+            onDestroy();
         });
     }
 }
