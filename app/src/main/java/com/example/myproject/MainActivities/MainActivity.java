@@ -22,7 +22,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected static Hero character; //Да не особо хорошо использовать static переменные, но так с ними
+    public static Hero character; //Да не особо хорошо использовать static переменные, но так с ними
     protected static ArrayList<Event> chapterEvents; // удобней работать в внутри фрагмента.
     protected static Event currentEvent;
 

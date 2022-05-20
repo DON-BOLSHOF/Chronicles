@@ -1,5 +1,6 @@
 package com.example.myproject.MainActivities;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import com.example.myproject.AdditionalEvent.AddEventParent;
 import com.example.myproject.AdditionalEvent.AdditionalEvent;
 import com.example.myproject.AdditionalEvent.AdditionalEventFragment;
+import com.example.myproject.AdditionalEvent.DiceRollFragment;
 import com.example.myproject.AdditionalEvent.NoteEvent;
 import com.example.myproject.AdditionalEvent.NoteEventFragment;
 import com.example.myproject.R;
@@ -109,11 +111,11 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 SetNoteEvent(scene.get_noteEvent());
         }
         if(scene.get_addMusicName() != null)
-            SetEventMusic(scene.get_addMusicName());
+            EventMusic(scene.get_addMusicName());
         SetMoney();
         SetRelFather();
         SetPopularity();
-        SetScrollViewUP(_textScrollView);
+        ScrollViewUP(_textScrollView);
     } // Чтобы лучше смотрелось
 
 /////////////////Music///////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +125,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         void StopAddMusic();
     }
 
-    private void SetEventMusic(String name){
+    private void EventMusic(String name){
         _eventMusic.SetAddMusic(name);
     }
 /////////////////View////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,12 +143,12 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         InitScene(MainActivity.currentEvent);
     }
 
-    private void SetViewFogging(){
+    private void ViewFogging(){
         animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
         _view.startAnimation(animation);
     }
 
-    private void SetViewCreating(){
+    private void ViewCreating(){
         animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphacreate);
         _view.startAnimation(animation);
     }
@@ -180,7 +182,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
 
-                SetFogging();
+                Fogging();
 
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
@@ -210,7 +212,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             _eventMusic.StopAddMusic();
 
             _eventButtonLayout.removeView(tempButton);
-            SetViewFogging();
+            ViewFogging();
 
             Handler handler = new Handler();
             handler.postDelayed(() -> {
@@ -222,8 +224,8 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                     SetRandomEvent();
                     InitScene(MainActivity.currentEvent);
                 }
-                SetViewCreating();
-                SetScrollViewUP(_textScrollView);
+                ViewCreating();
+                ScrollViewUP(_textScrollView);
             }, 1500);
         });
     }
@@ -234,7 +236,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         _eventTitle.startAnimation(animation);
     }
 
-    private void SetFogging(){
+    private void Fogging(){
         animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
         SetAnimation(animation);
 
@@ -243,7 +245,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         }
     }
 
-    private void SetScrollViewUP(ScrollView mScrollView){
+    private void ScrollViewUP(ScrollView mScrollView){
         mScrollView.fullScroll(View.FOCUS_UP);
     }
 
@@ -252,7 +254,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
         animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphacreate);
 
-        SetScrollViewUP(_textScrollView);
+        ScrollViewUP(_textScrollView);
 
         SetAnimation(animation);
         button.startAnimation(animation);
@@ -279,22 +281,23 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
         CustomButton[] reaction = null;
 
-        if(button.getToCheck() != null)
+        if(button.getToCheck() != null) {
             if (HasPassTheRollPositive(button.getToCheck())) {
+
                 buttonReact = button.getReaction()[0];
 
-                if(MainActivity.currentEvent.get_eventType().equals("StoryEvent"))
+                if (MainActivity.currentEvent.get_eventType().equals("StoryEvent"))
                     MainActivity.currentEvent.set_isLoop(false);
 
-                if(button.getReactionEventButtons() != null){
+                if (button.getReactionEventButtons() != null) {
                     reaction = button.getReactionEventButtons()[0];
                 }
-            }
-            else{
+            } else {
                 buttonReact = button.getReaction()[1];
-                if(button.getReactionEventButtons() != null) {
-                reaction = button.getReactionEventButtons()[1];
-             }
+                if (button.getReactionEventButtons() != null) {
+                    reaction = button.getReactionEventButtons()[1];
+                }
+            }
         }
         else {
             buttonReact = button.getReaction()[0];
@@ -307,7 +310,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             SetButtons(reaction);
 
         SetEventText(buttonReact.getReactionText());
-        SetScrollViewUP(_textScrollView);
+        ScrollViewUP(_textScrollView);
         SetTitle(buttonReact.getReactTitle());
         SetUpdateParams(buttonReact.getWillChanged());
     }
@@ -352,6 +355,19 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 .replace(R.id.AddEvent, noteEventFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void SetDiceRollFragment(int rollValue, String[][] reactions){
+        DiceRollFragment rollFragment = new DiceRollFragment(this, rollValue, reactions);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.AddEvent, rollFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void SetRoll(){
+        SetBlackoutOn();
+        SetBackgroundDisabled();
     }
 
     private void SetBackgroundDisabled(){
@@ -406,14 +422,23 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             for (String[] changeStat : changeStats) {
                 switch (changeStat[0]) {
                     case "Money": {
+                        if(MainActivity.character.getMoney() + Integer.parseInt(changeStat[1])<0)
+                            AnimateNumberScroll(MainActivity.character.getMoney(), 0, _characterMoney);
+                        else
+                            AnimateNumberScroll(MainActivity.character.getMoney(), MainActivity.character.getMoney() + Integer.parseInt(changeStat[1]), _characterMoney);
+
                         MainActivity.character.boostMoney(Integer.parseInt(changeStat[1]));
                         break;
                     }
                     case "FatherRelations": {
+                        AnimateNumberScroll(MainActivity.character.getFatherRel(), MainActivity.character.getFatherRel() + Integer.parseInt(changeStat[1]), _characterRelFather);
+
                         MainActivity.character.boostFatherRel(Integer.parseInt(changeStat[1]));
                         break;
                     }
                     case "Popularity": {
+                        AnimateNumberScroll(MainActivity.character.getPopularity(), MainActivity.character.getPopularity() + Integer.parseInt(changeStat[1]), _characterPopularity);
+
                         MainActivity.character.boosPopularity(Integer.parseInt(changeStat[1]));
                         break;
                     }
@@ -423,7 +448,6 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                     }
                     case "ShopLvl": {
                         MainActivity.character.boostShopLvl((Integer.parseInt(changeStat[1])));
-
                         if(Integer.parseInt(changeStat[1]) == 0) //Самый худший костыль, из всех, но в силу архитектуры чтения json-файла придется использовать это
                             MainActivity.character.boostMoney(MainActivity.character.getShopLvl() * 2);
                         break;
@@ -471,6 +495,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
        boolean _hasPass = true;
        boolean _isItMoneyCheck = false;
        int moneyToWindraw = 0;
+       int rollValue = 0;
 
         for (String[] reaction : _reactions) {
             String _temp = reaction[0];
@@ -489,7 +514,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "Popularity": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                    if (_myParams < _paramsToCheck) {                              // Как в ДНД.
+                    if (_myParams+rollValue < _paramsToCheck) {                              // Как в ДНД.
                         _hasPass = false;
                     }
                     break;
@@ -497,15 +522,15 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "FatherRelations": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     int _myParams = MainActivity.character.getFatherRel();
-                    if (_myParams < _paramsToCheck) {
+                    if (_myParams+rollValue < _paramsToCheck) {
                         _hasPass = false;
                     }
                     break;
                 }
-                case "FightSkills": {
+                case "FightingSkill": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     int _myParams = MainActivity.character.getFightSkill();
-                    if (_myParams < _paramsToCheck) {
+                    if (_myParams+rollValue < _paramsToCheck) {
                         _hasPass = false;
                     }
                     break;
@@ -530,10 +555,17 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                         _hasPass = false;
                     break;
                 }
-                case "Random": {
+                case "RandomEvent": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     if(Roll() < _paramsToCheck)
                         _hasPass = false;
+                    break;
+                }
+                case "RandomValue": {
+                    rollValue = Roll();
+
+                    SetRoll();
+                    SetDiceRollFragment(rollValue,_reactions);
                     break;
                 }
             }
@@ -554,6 +586,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
         for (String[] reaction : _reactions) {
             String _temp = reaction[0];
+            int rollValue = 0;
             switch (_temp) {
                 case "Money": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
@@ -566,7 +599,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "Popularity": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                    if (_myParams > _paramsToCheck) {                              // Как в ДНД.
+                    if (_myParams - rollValue > _paramsToCheck) {                              // Как в ДНД.
                         _hasPass = false;
                     }
                     break;
@@ -574,15 +607,15 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "FatherRelations": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     int _myParams = MainActivity.character.getFatherRel();
-                    if (_myParams > _paramsToCheck) {
+                    if (_myParams - rollValue > _paramsToCheck) {
                         _hasPass = false;
                     }
                     break;
                 }
-                case "FightSkills": {
+                case "FightingSkill": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
                     int _myParams = MainActivity.character.getFightSkill();
-                    if (_myParams > _paramsToCheck) {
+                    if (_myParams - rollValue > _paramsToCheck) {
                         _hasPass = false;
                     }
                     break;
@@ -607,10 +640,16 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                         _hasPass = false;
                     break;
                 }
-                case "Random": {
+                case "RandomEvent": {
                     int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    if(Roll() >= _paramsToCheck)
+                    if(Roll() > _paramsToCheck)
                         _hasPass = false;
+                    break;
+                }
+                case "RandomValue": {
+                    rollValue = Roll();
+                    SetRoll();
+                    SetDiceRollFragment(rollValue, _reactions);
                     break;
                 }
             }
@@ -621,7 +660,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
     private int Roll(){
         Random _rand = new Random();
-        return  _rand.nextInt(3 + 3)  - 3;
+        return  _rand.nextInt(20) ;
     }
 
     private boolean CheckFrequency(Event mEvent){
@@ -637,5 +676,21 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         Random _rand = new Random();
         return  _rand.nextInt(6);
     }
-///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////Animations///////////////////////////////////////////////////////////
+    private void AnimateNumberScroll(int initialValue, int finalValue, final TextView textview) {
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(initialValue, finalValue);
+        valueAnimator.setDuration(1000);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+
+                textview.setText(valueAnimator.getAnimatedValue().toString());
+
+            }
+        });
+    valueAnimator.start();
+
+    }
 }

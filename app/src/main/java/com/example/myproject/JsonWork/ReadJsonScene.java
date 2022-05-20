@@ -89,8 +89,8 @@ public class ReadJsonScene {
     }
 
     private static CustomButton ReadButtonJson(JSONObject button) throws  JSONException {
-        String[][] check = null;
-        Reaction[] reactions = null;
+        String[][] check;
+        Reaction[] reactions;
 
         String buttonName = button.getString("ButtonName");
 
@@ -141,7 +141,9 @@ public class ReadJsonScene {
             reactions[i] = new Reaction(reactTitle, reactText, changed);
         }
 
-        return new CustomButton(buttonName,reactions, check);
+        CustomButton customButton = new CustomButton(buttonName,reactions, check);
+
+        return customButton;
     }
 
     private static Event ReadEvent(JSONObject _jsonEvent) throws  JSONException {
@@ -196,7 +198,7 @@ public class ReadJsonScene {
     }
 
     private static String RequiredParameters(String[][] _toCheckAnnotation , String _eventText) {
-        if (_toCheckAnnotation != null) {
+        if (_toCheckAnnotation != null && _toCheckAnnotation[0][0].equals("RandomValue")) {
             _eventText += "\n\nТребуется:\n";
             for (int i = 0; i < _toCheckAnnotation.length; i++) {
                 if(_toCheckAnnotation[i][0].equals("Money")){
@@ -215,7 +217,7 @@ public class ReadJsonScene {
                     _eventText += String.format("%s: %s.\n", "Хорошо обращаться с мечом", _toCheckAnnotation[i][1]);
                 }
 
-                if(_toCheckAnnotation[i][0].equals("Random")){
+                if(_toCheckAnnotation[i][0].equals("RandomValue")){
                     _eventText += "Подбросить кубик";
                 }
             }

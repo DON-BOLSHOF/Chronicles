@@ -1,8 +1,8 @@
 {
   "FatherRelations": 1,
-  "Popularity": 0,
+  "Popularity": 5,
   "Money": 2,
-  "FightSkills": 0,
+  "FightSkills": 6,
   "ShopLvl": 0,
   "HasHorse" : "False",
   "HasEquip" : "False"
