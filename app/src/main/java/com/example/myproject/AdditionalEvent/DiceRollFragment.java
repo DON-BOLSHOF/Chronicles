@@ -1,6 +1,5 @@
 package com.example.myproject.AdditionalEvent;
 
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

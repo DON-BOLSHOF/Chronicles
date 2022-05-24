@@ -39,22 +39,29 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     private long mLastClickTime = 0; // Нужно предотвратить двойное нажатие кнопки
 
     private Animation animation;
+
     private ImageView _eventImage;
     private TextView _eventTitle;
     private LinearLayout _eventButtonLayout;
     private Button buttons[];
     private TextView _eventText;
+
     private TextView _characterMoney;
     private TextView _characterRelFather;
     private TextView _characterPopularity;
+
     private ScrollView _textScrollView;
+
     private View _view;
-    private AdditionalEventFragment additionalEventFragment;
-    private NoteEventFragment noteEventFragment;
-    private AddMusic _eventMusic;
+
+    private final AddMusic _eventMusic;
+
     private ImageButton _preffButton;
 
-    public FragmentSceneManager(AddMusic addMusic){
+    private final UpdateNavigationParams mUpdateNavigationParams;
+
+    public FragmentSceneManager(UpdateNavigationParams mUpdateNavigationParams, AddMusic addMusic){
+        this.mUpdateNavigationParams = mUpdateNavigationParams;
         _eventMusic = addMusic;
     }
 
@@ -342,7 +349,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void SetAdditionalFragment(AdditionalEvent addEvent){
-        additionalEventFragment = new AdditionalEventFragment(this, addEvent);
+        AdditionalEventFragment additionalEventFragment = new AdditionalEventFragment(this, addEvent);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.AddEvent, additionalEventFragment)
                 .addToBackStack(null)
@@ -350,7 +357,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void SetNoteEventFragment(NoteEvent noteEvent){
-        noteEventFragment = new NoteEventFragment(this,  noteEvent);
+        NoteEventFragment noteEventFragment = new NoteEventFragment(this, noteEvent);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.AddEvent, noteEventFragment)
                 .addToBackStack(null)
@@ -422,42 +429,46 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             for (String[] changeStat : changeStats) {
                 switch (changeStat[0]) {
                     case "Money": {
-                        if(MainActivity.character.getMoney() + Integer.parseInt(changeStat[1])<0)
-                            AnimateNumberScroll(MainActivity.character.getMoney(), 0, _characterMoney);
-                        else
-                            AnimateNumberScroll(MainActivity.character.getMoney(), MainActivity.character.getMoney() + Integer.parseInt(changeStat[1]), _characterMoney);
+                        AnimateNumberScroll(MainActivity.character.getMoney(), MainActivity.character.getMoney() + Integer.parseInt(changeStat[1]), _characterMoney);
 
                         MainActivity.character.boostMoney(Integer.parseInt(changeStat[1]));
+                        mUpdateNavigationParams.UpdateParam("Money", MainActivity.character.getMoney());
                         break;
                     }
                     case "FatherRelations": {
                         AnimateNumberScroll(MainActivity.character.getFatherRel(), MainActivity.character.getFatherRel() + Integer.parseInt(changeStat[1]), _characterRelFather);
 
                         MainActivity.character.boostFatherRel(Integer.parseInt(changeStat[1]));
+                        mUpdateNavigationParams.UpdateParam("FatherRelations", MainActivity.character.getFatherRel());
                         break;
                     }
                     case "Popularity": {
                         AnimateNumberScroll(MainActivity.character.getPopularity(), MainActivity.character.getPopularity() + Integer.parseInt(changeStat[1]), _characterPopularity);
 
                         MainActivity.character.boosPopularity(Integer.parseInt(changeStat[1]));
+                        mUpdateNavigationParams.UpdateParam("Popularity", MainActivity.character.getPopularity());
                         break;
                     }
                     case "FightingSkill": {
                         MainActivity.character.boostFightSkill((Integer.parseInt(changeStat[1])));
+                        mUpdateNavigationParams.UpdateParam("FightingSkill", MainActivity.character.getFightSkill());
                         break;
                     }
                     case "ShopLvl": {
                         MainActivity.character.boostShopLvl((Integer.parseInt(changeStat[1])));
                         if(Integer.parseInt(changeStat[1]) == 0) //Самый худший костыль, из всех, но в силу архитектуры чтения json-файла придется использовать это
                             MainActivity.character.boostMoney(MainActivity.character.getShopLvl() * 2);
+                        mUpdateNavigationParams.UpdateParam("ShopLvl", MainActivity.character.getShopLvl());
                         break;
                     }
                     case "HasEquip": {
                         MainActivity.character.setHasEquip(Boolean.parseBoolean(changeStat[1]));
+                        mUpdateNavigationParams.UpdateParam("HasEquip", MainActivity.character.isHasEquip());
                         break;
                     }
                     case "HasHorse": {
                         MainActivity.character.setHasHorse(Boolean.parseBoolean(changeStat[1]));
+                        mUpdateNavigationParams.UpdateParam("HasHorse", MainActivity.character.isHasHorse());
                         break;
                     }
                 }
@@ -493,8 +504,6 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
     private boolean HasPassTheRollPositive(String[][] _reactions){
        boolean _hasPass = true;
-       boolean _isItMoneyCheck = false;
-       int moneyToWindraw = 0;
        int rollValue = 0;
 
         for (String[] reaction : _reactions) {
@@ -505,9 +514,6 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                     int _myParams = MainActivity.character.getMoney();
                     if (_myParams < _paramsToCheck) {
                         _hasPass = false;
-                    } else {
-                        _isItMoneyCheck = true;
-                        moneyToWindraw = _paramsToCheck;
                     }
                     break;
                 }
@@ -571,14 +577,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             }
         }
 
-       if(_hasPass && _isItMoneyCheck)
-           WindrowMoney(moneyToWindraw);
-
        return _hasPass;
-    }
-
-    private void WindrowMoney(int money){
-        MainActivity.character.boostMoney(-money);
     }
 
     private boolean HasPassTheRollNegative(String[][] _reactions){
@@ -690,7 +689,12 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
             }
         });
-    valueAnimator.start();
+      valueAnimator.start();
+    }
 
+///////////////////////////UpdateNavigationParams///////////////////////////////////////////////
+    public interface UpdateNavigationParams{
+        void UpdateParam(String name, int value);
+        void UpdateParam(String name, boolean value);
     }
 }

@@ -7,13 +7,12 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.ImageView;
 
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
 
+import com.example.myproject.AdditionalEvent.Navigation.ParentNavigationActivity;
 import com.example.myproject.JsonWork.ReadJsonHero;
 import com.example.myproject.JsonWork.ReadJsonScene;
 import com.example.myproject.MusicServices.MusicService;
@@ -23,7 +22,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class ActionActivity extends AppCompatActivity implements FragmentSceneManager.AddMusic {
+public class ActionActivity extends ParentNavigationActivity implements FragmentSceneManager.AddMusic {
     private MediaPlayer _mPlayer;
     private Boolean _isAddMusicPlaying = false;
     private Boolean _hasPermissionToMusic = true;
@@ -83,7 +82,7 @@ public class ActionActivity extends AppCompatActivity implements FragmentSceneMa
     }
 
     private void SetScene(){
-        FragmentSceneManager _scene = new FragmentSceneManager(this);
+        FragmentSceneManager _scene = new FragmentSceneManager(this,this);
         FragmentTransaction _ft = getSupportFragmentManager().beginTransaction();
         _ft.replace(R.id.sceneLayout, _scene);
         _ft.commit();
