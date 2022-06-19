@@ -47,11 +47,11 @@ public class SettingsActivity extends AppCompatActivity {
     private void CheckPreferences(){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        String _size = pref.getString("size", null);
-        if(_size != null){
+        String size = pref.getString("size", null);
+        if(size != null){
             Resources res = getResources();
             Configuration configuration = new Configuration(res.getConfiguration());
-            switch (_size){
+            switch (size){
                 case "маленький":{
                     configuration.fontScale = 0.8f;
                     res.updateConfiguration(configuration, res.getDisplayMetrics());

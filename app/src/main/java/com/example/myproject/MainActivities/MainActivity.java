@@ -1,12 +1,12 @@
 package com.example.myproject.MainActivities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myproject.JsonWork.ReadJsonHero;
 import com.example.myproject.JsonWork.ReadJsonScene;
@@ -38,16 +38,17 @@ public class MainActivity extends AppCompatActivity {
         PACKAGE_NAME = getPackageName();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Set Portrait
 
-        Button _startButton = (Button) findViewById(R.id.startButton);
-        Button _continueButton = (Button) findViewById(R.id.continueButton);
+        Button startButton = findViewById(R.id.startButton);
+        Button continueButton =findViewById(R.id.continueButton);
 
         _titles = getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
-        _startButton.setOnClickListener(view -> {
+        startButton.setOnClickListener(view -> {
 
-            OverWriteParams(); // Перезапись sharedPrefs
+            if (_titles != null)
+                OverWriteParams(); // Перезапись sharedPrefs
 
             try {
-                chapterEvents = new ArrayList<>(ReadJsonScene.ReadNewSceneJSONFile(MainActivity.this));
+                chapterEvents = new ArrayList<>(ReadJsonScene.ReadSceneJSONFile(MainActivity.this));
                 character = ReadJsonHero.SetNewGameHero(MainActivity.this);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -59,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if(_titles != null) {
-            _continueButton.setOnClickListener(view -> {
+            continueButton.setOnClickListener(view -> {
                 try {
                     character = ReadJsonHero.SetContinueHero(MainActivity.this);
-                    chapterEvents = new ArrayList<>(ReadJsonScene.ReadContinueSceneJSONFile(MainActivity.this));
+                    chapterEvents = new ArrayList<>(ReadJsonScene.ReadSceneJSONFile(MainActivity.this));
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
@@ -76,13 +77,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             });
         }else{
-            _continueButton.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Ваш путь еще не начался...", Toast.LENGTH_SHORT).show());
+            continueButton.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Ваш путь еще не начался...", Toast.LENGTH_SHORT).show());
         }
     }
 
     private int RandomEvent(){
-        Random _rand = new Random();
-        return _rand.nextInt(chapterEvents.size());
+        Random rand = new Random();
+        return rand.nextInt(chapterEvents.size());
     }
 
     private void OverWriteParams(){
@@ -92,10 +93,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }

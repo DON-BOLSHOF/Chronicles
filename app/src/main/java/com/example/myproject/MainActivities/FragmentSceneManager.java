@@ -36,14 +36,14 @@ import com.example.myproject.SubClasses.Reaction;
 import java.util.Random;
 
 public class FragmentSceneManager extends Fragment implements AddEventParent.OnDestroyed {
-    private long mLastClickTime = 0; // Нужно предотвратить двойное нажатие кнопки
+    private long _mLastClickTime = 0; // Нужно предотвратить двойное нажатие кнопки
 
-    private Animation animation;
+    private Animation _animation;
 
     private ImageView _eventImage;
     private TextView _eventTitle;
     private LinearLayout _eventButtonLayout;
-    private Button buttons[];
+    private Button _buttons[];
     private TextView _eventText;
 
     private TextView _characterMoney;
@@ -81,11 +81,6 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
         return _view;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 /////////////////Initialization/////////////////////////////////////////////////////////////////////////////////////
     private void InitSceneParam(){
         _eventText =  _view.findViewById(R.id.EventText);
@@ -107,18 +102,18 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void InitScene(Event scene){
-        SetTitle(scene.get_titleName());
-        SetImage(scene.get_imageName());
-        SetEventText(scene.get_eventText());
-        SetButtons(scene.get_buttons());
-        if(scene.is_hasAddEvent()) {
-            if (scene.get_typeAddEvent().equals("ReactEvent"))
-                SetAdditionalEvent(scene.get_addEvent());
+        SetTitle(scene.getTitleName());
+        SetImage(scene.getImageName());
+        SetEventText(scene.getEventText());
+        SetButtons(scene.getButtons());
+        if(scene.isHasAddEvent()) {
+            if (scene.getTypeAddEvent().equals("ReactEvent"))
+                SetAdditionalEvent(scene.getAddEvent());
             else
-                SetNoteEvent(scene.get_noteEvent());
+                SetNoteEvent(scene.getNoteEvent());
         }
-        if(scene.get_addMusicName() != null)
-            EventMusic(scene.get_addMusicName());
+        if(scene.getAddMusicName() != null)
+            EventMusic(scene.getAddMusicName());
         SetMoney();
         SetRelFather();
         SetPopularity();
@@ -137,9 +132,9 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 /////////////////View////////////////////////////////////////////////////////////////////////////////////////////////
     private void SetEvent(String eventName){ //Найти и поставить ивент по названию
-        for (int i=0; i<MainActivity.chapterEvents.size(); i++){
+        for (int i = 0; i<MainActivity.chapterEvents.size(); i++){
             Event temp = MainActivity.chapterEvents.get(i);
-            if(temp.get_titleName().equals(eventName)) {
+            if(temp.getTitleName().equals(eventName)) {
                 MainActivity.currentEvent = temp;
                 InitScene(temp);
                 return;
@@ -151,13 +146,13 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void ViewFogging(){
-        animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
-        _view.startAnimation(animation);
+        _animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
+        _view.startAnimation(_animation);
     }
 
     private void ViewCreating(){
-        animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphacreate);
-        _view.startAnimation(animation);
+        _animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphacreate);
+        _view.startAnimation(_animation);
     }
 
     private void SetImage(String img) { //Поставить картину
@@ -176,18 +171,18 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         }
 
         int numbers = buttons.length;
-        this.buttons = new Button[numbers];
+        this._buttons = new Button[numbers];
         for(int i=0;i<numbers;i++){
-            this.buttons[i] = new Button(requireActivity());
-            this.buttons[i].setText(buttons[i].getName());
+            this._buttons[i] = new Button(requireActivity());
+            this._buttons[i].setText(buttons[i].getName());
 
             int finalI = i; //Android studio предложил это решение
 
-            this.buttons[i].setOnClickListener(v -> {
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1550){
+            this._buttons[i].setOnClickListener(v -> {
+                if (SystemClock.elapsedRealtime() - _mLastClickTime < 1550){
                     return;
                 }
-                mLastClickTime = SystemClock.elapsedRealtime();
+                _mLastClickTime = SystemClock.elapsedRealtime();
 
                 Fogging();
 
@@ -199,7 +194,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         }
 
         for(int i=0; i<numbers; i++){
-            SetCreating(this.buttons[i]);
+            SetCreating(this._buttons[i]);
         }
 
     }
@@ -211,10 +206,10 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         SetCreating(tempButton);
 
         tempButton.setOnClickListener(view -> {
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1550){
+            if (SystemClock.elapsedRealtime() - _mLastClickTime < 1550){
                 return;
             }
-            mLastClickTime = SystemClock.elapsedRealtime();
+            _mLastClickTime = SystemClock.elapsedRealtime();
 
             _eventMusic.StopAddMusic();
 
@@ -223,7 +218,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
             Handler handler = new Handler();
             handler.postDelayed(() -> {
-                String tempEvent = MainActivity.currentEvent.get_nameEventToSet();
+                String tempEvent = MainActivity.currentEvent.getNameEventToSet();
                 CheckLoop(MainActivity.currentEvent); //Проверь и удали если не луп
                 if(tempEvent != null)
                     SetEvent(tempEvent);
@@ -244,11 +239,11 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void Fogging(){
-        animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
-        SetAnimation(animation);
+        _animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphadel);
+        SetAnimation(_animation);
 
-        for (Button button : buttons) {
-            button.startAnimation(animation);
+        for (Button button : _buttons) {
+            button.startAnimation(_animation);
         }
     }
 
@@ -259,12 +254,12 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     private void SetCreating(Button button){
         _eventButtonLayout.addView(button);
 
-        animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphacreate);
+        _animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphacreate);
 
         ScrollViewUP(_textScrollView);
 
-        SetAnimation(animation);
-        button.startAnimation(animation);
+        SetAnimation(_animation);
+        button.startAnimation(_animation);
     }
 
     private void SetEventText(String text){
@@ -279,7 +274,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         SetNonImage();
         Reaction buttonReact;
 
-        for (Button value : buttons) {
+        for (Button value : _buttons) {
             _eventButtonLayout.removeView(value);
         }
 
@@ -293,8 +288,8 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
                 buttonReact = button.getReaction()[0];
 
-                if (MainActivity.currentEvent.get_eventType().equals("StoryEvent"))
-                    MainActivity.currentEvent.set_isLoop(false);
+                if (MainActivity.currentEvent.getEventType().equals("StoryEvent"))
+                    MainActivity.currentEvent.setLoop(false);
 
                 if (button.getReactionEventButtons() != null) {
                     reaction = button.getReactionEventButtons()[0];
@@ -324,14 +319,14 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
     private void SetRandomEvent(){
         Random _rand = new Random();
-        int _value = _rand.nextInt(MainActivity.chapterEvents.size());
-        int _current = MainActivity.chapterEvents.indexOf(MainActivity.currentEvent);
+        int value = _rand.nextInt(MainActivity.chapterEvents.size());
+        int current = MainActivity.chapterEvents.indexOf(MainActivity.currentEvent);
 
-        while (_current == _value  || !CheckAdditionalEvent(MainActivity.chapterEvents.get(_value)) || !CheckFrequency(MainActivity.chapterEvents.get(_value)))
-            _value = _rand.nextInt(MainActivity.chapterEvents.size());
+        while (current == value  || !CheckAdditionalEvent(MainActivity.chapterEvents.get(value)) || !CheckFrequency(MainActivity.chapterEvents.get(value)))
+            value = _rand.nextInt(MainActivity.chapterEvents.size());
 
 
-        MainActivity.currentEvent = MainActivity.chapterEvents.get(_value);
+        MainActivity.currentEvent = MainActivity.chapterEvents.get(value);
     }
 /////////////////AdditionalEvent/////////////////////////////////////////////////////////////////////////////////////
 
@@ -385,8 +380,8 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void SetBlackoutOn(){
-        animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphablackoutcreate);
-        ActionActivity.blackout.startAnimation(animation);
+        _animation = AnimationUtils.loadAnimation(requireActivity(), R.anim.alphablackoutcreate);
+        ActionActivity.blackout.startAnimation(_animation);
         ActionActivity.blackout.setAlpha(0.5f);
     }
 
@@ -477,7 +472,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private void CheckLoop(Event event){
-        if(!event.is_isLoop())
+        if(event.isLoop())
             RemoveEvent(event);
     }
 
@@ -486,11 +481,11 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private boolean CheckAdditionalEvent(Event testEvent){
-        if(testEvent.get_addEvent() == null) //Нет addEvent значит ничего проверять не надо
+        if(testEvent.getAddEvent() == null) //Нет addEvent значит ничего проверять не надо
             return true;
         else{
-            String[][] toCheck = testEvent.get_addEvent().getCheck();
-            String type = testEvent.get_addEvent().getType();
+            String[][] toCheck = testEvent.getAddEvent().getCheck();
+            String type = testEvent.getAddEvent().getType();
 
             if(type.equals("Neutral"))
                 return true; //Нечего тут проверять
@@ -503,72 +498,72 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     private boolean HasPassTheRollPositive(String[][] _reactions){
-       boolean _hasPass = true;
+       boolean hasPass = true;
        int rollValue = 0;
 
         for (String[] reaction : _reactions) {
-            String _temp = reaction[0];
-            switch (_temp) {
+            String temp = reaction[0];
+            switch (temp) {
                 case "Money": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getMoney();
-                    if (_myParams < _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getMoney();
+                    if (myParams < paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "Popularity": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                    if (_myParams+rollValue < _paramsToCheck) {                              // Как в ДНД.
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
+                    if (myParams+rollValue < paramsToCheck) {                              // Как в ДНД.
+                        hasPass = false;
                     }
                     break;
                 }
                 case "FatherRelations": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFatherRel();
-                    if (_myParams+rollValue < _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getFatherRel();
+                    if (myParams+rollValue < paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "FightingSkill": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFightSkill();
-                    if (_myParams+rollValue < _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getFightSkill();
+                    if (myParams+rollValue < paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "ShopLvl": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getShopLvl();
-                    if (_myParams < _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getShopLvl();
+                    if (myParams < paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "HasEquip": {
-                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasEquip() != _myParam)
-                        _hasPass = false;
+                    boolean myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasEquip() != myParam)
+                        hasPass = false;
                     break;
                 }
                 case "HasHorse": {
-                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasHorse() != _myParam)
-                        _hasPass = false;
+                    boolean myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasHorse() != myParam)
+                        hasPass = false;
                     break;
                 }
                 case "RandomEvent": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    if(Roll() < _paramsToCheck)
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    if(CubeRoll() < paramsToCheck)
+                        hasPass = false;
                     break;
                 }
                 case "RandomValue": {
-                    rollValue = Roll();
+                    rollValue = CubeRoll();
 
                     SetRoll();
                     SetDiceRollFragment(rollValue,_reactions);
@@ -577,76 +572,76 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             }
         }
 
-       return _hasPass;
+       return hasPass;
     }
 
     private boolean HasPassTheRollNegative(String[][] _reactions){
-       boolean _hasPass = true;
+       boolean hasPass = true;
 
         for (String[] reaction : _reactions) {
-            String _temp = reaction[0];
+            String temp = reaction[0];
             int rollValue = 0;
-            switch (_temp) {
+            switch (temp) {
                 case "Money": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getMoney();
-                    if (_myParams > _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getMoney();
+                    if (myParams > paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "Popularity": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                    if (_myParams - rollValue > _paramsToCheck) {                              // Как в ДНД.
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
+                    if (myParams - rollValue > paramsToCheck) {                              // Как в ДНД.
+                        hasPass = false;
                     }
                     break;
                 }
                 case "FatherRelations": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFatherRel();
-                    if (_myParams - rollValue > _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getFatherRel();
+                    if (myParams - rollValue > paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "FightingSkill": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getFightSkill();
-                    if (_myParams - rollValue > _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getFightSkill();
+                    if (myParams - rollValue > paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "ShopLvl": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    int _myParams = MainActivity.character.getShopLvl();
-                    if (_myParams > _paramsToCheck) {
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    int myParams = MainActivity.character.getShopLvl();
+                    if (myParams > paramsToCheck) {
+                        hasPass = false;
                     }
                     break;
                 }
                 case "HasEquip": {
-                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasEquip() == _myParam)
-                        _hasPass = false;
+                    boolean myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasEquip() == myParam)
+                        hasPass = false;
                     break;
                 }
                 case "HasHorse": {
-                    boolean _myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasHorse() == _myParam)
-                        _hasPass = false;
+                    boolean myParam = Boolean.parseBoolean(reaction[1]);
+                    if (MainActivity.character.isHasHorse() == myParam)
+                        hasPass = false;
                     break;
                 }
                 case "RandomEvent": {
-                    int _paramsToCheck = Integer.parseInt(reaction[1]);
-                    if(Roll() > _paramsToCheck)
-                        _hasPass = false;
+                    int paramsToCheck = Integer.parseInt(reaction[1]);
+                    if(CubeRoll() > paramsToCheck)
+                        hasPass = false;
                     break;
                 }
                 case "RandomValue": {
-                    rollValue = Roll();
+                    rollValue = CubeRoll();
                     SetRoll();
                     SetDiceRollFragment(rollValue, _reactions);
                     break;
@@ -654,26 +649,26 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             }
         }
 
-       return _hasPass;
+       return hasPass;
     }
 
-    private int Roll(){
-        Random _rand = new Random();
-        return  _rand.nextInt(20) ;
+    private int CubeRoll(){
+        Random rand = new Random();
+        return  rand.nextInt(20) ;
     }
 
     private boolean CheckFrequency(Event mEvent){
-        if(!mEvent.is_isLoop()) //Если нет frequency
+        if(mEvent.isLoop()) //Если нет frequency
             return true;
 
-        int frequency = mEvent.get_frequency();
+        int frequency = mEvent.getFrequency();
 
         return FrequencyRoll()>=Math.abs(frequency-6); //Если частота меньше то шанс ролла меньше должен быть
     }
 
     private int FrequencyRoll(){
-        Random _rand = new Random();
-        return  _rand.nextInt(6);
+        Random rand = new Random();
+        return  rand.nextInt(6);
     }
 ////////////////////////////Animations///////////////////////////////////////////////////////////
     private void AnimateNumberScroll(int initialValue, int finalValue, final TextView textview) {
@@ -681,14 +676,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         ValueAnimator valueAnimator = ValueAnimator.ofInt(initialValue, finalValue);
         valueAnimator.setDuration(1000);
 
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
-                textview.setText(valueAnimator.getAnimatedValue().toString());
-
-            }
-        });
+        valueAnimator.addUpdateListener(valueAnimator1 -> textview.setText(valueAnimator1.getAnimatedValue().toString()));
       valueAnimator.start();
     }
 

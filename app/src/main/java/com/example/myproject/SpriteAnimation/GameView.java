@@ -13,17 +13,17 @@ import com.example.myproject.R;
 
 public class GameView extends View{
 
-    private Sprite CubeAnim;
-    private Sprite CubeValue;
+    private final Sprite CubeAnim;
+    private final Sprite CubeValue;
 
     private final int timerInterval = 30;
     private final int timerValue = 220;
-    private int rollValue; //ДА огромное вложение((
+    private final int rollValue; //ДА огромное вложение((
 
-    private int timer = 0;
+    private int _timer = 0;
 
-    private int viewWidth;
-    private int viewHeight;
+    private int _viewWidth;
+    private int _viewHeight;
 
     public GameView(Context context, int rollValue) {
         super(context);
@@ -34,7 +34,7 @@ public class GameView extends View{
         int w = b.getWidth()/5;
         int h = b.getHeight();
         Rect firstFrame = new Rect(0, 0, w, h);
-        CubeAnim = new Sprite(viewHeight/2, viewWidth/2
+        CubeAnim = new Sprite(_viewHeight /2, _viewWidth /2
                 , firstFrame, b);
 
         for (int i = 1; i < 5; i++) {
@@ -63,8 +63,8 @@ public class GameView extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);;
-        if(timer < timerValue)
+        super.onDraw(canvas);
+        if(_timer < timerValue)
             CubeAnim.draw(canvas);
         else
             CubeValue.draw(canvas);
@@ -73,14 +73,14 @@ public class GameView extends View{
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        viewWidth = w;
-        viewHeight = h;
+        _viewWidth = w;
+        _viewHeight = h;
     }
 
     protected void update () {
-        if(timer < timerValue) {
+        if(_timer < timerValue) {
             CubeAnim.update(timerInterval);
-            timer += 5;
+            _timer += 5;
         }else {
             CubeAnim.setCurrentFrame(CubeAnim.getFramesCount() - 1);
             CubeValue.setCurrentFrame(rollValue);

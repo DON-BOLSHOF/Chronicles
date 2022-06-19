@@ -10,13 +10,13 @@ import com.example.myproject.MainActivities.MainActivity;
 import com.example.myproject.R;
 
 public class NoteEventFragment  extends  AddEventParent{
-    private ImageView noteImage;
-    private NoteEvent noteEvent;
+    private ImageView _noteImage;
+    private NoteEvent _noteEvent;
 
     public NoteEventFragment(OnDestroyed events, NoteEvent event) {
         super(events);
 
-        noteEvent = event;
+        _noteEvent = event;
     }
 
     @Override
@@ -47,17 +47,17 @@ public class NoteEventFragment  extends  AddEventParent{
     private void InitSceneParam(){
         title =  view.findViewById(R.id.Title);
         description =  view.findViewById(R.id.Description);
-        noteImage = view.findViewById(R.id.NoteImage);
+        _noteImage = view.findViewById(R.id.NoteImage);
     }
 
     private void InitNoteEvent(){
-        title.setText(noteEvent.getTitle());
-        description.setText(noteEvent.getDescription());
-        SetImage(noteEvent.getImageName());
+        title.setText(_noteEvent.getTitle());
+        description.setText(_noteEvent.getDescription());
+        SetImage(_noteEvent.getImageName());
     }
 
     private void SetImage(String img) { //Поставить картину
         int resID = getResources().getIdentifier(img , "drawable", MainActivity.PACKAGE_NAME);
-        noteImage.setImageResource(resID);
+        _noteImage.setImageResource(resID);
     }
 }

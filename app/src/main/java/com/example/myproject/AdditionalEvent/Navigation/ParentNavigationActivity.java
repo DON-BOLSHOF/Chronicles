@@ -11,8 +11,8 @@ import com.example.myproject.MainActivities.MainActivity;
 import com.example.myproject.R;
 
 public class ParentNavigationActivity extends AppCompatActivity  implements FragmentSceneManager.UpdateNavigationParams {
-    NavigationLayout navigationLayout;
-    ConstraintLayout left_drawer;
+    NavigationLayout _navigationLayout;
+    ConstraintLayout _left_drawer;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -22,12 +22,12 @@ public class ParentNavigationActivity extends AppCompatActivity  implements Frag
 
     public void setupMenu()
     {
-        left_drawer=(ConstraintLayout) findViewById(R.id.left_drawer);
-        navigationLayout=new NavigationLayout(getApplicationContext(),left_drawer);
+        _left_drawer =(ConstraintLayout) findViewById(R.id.left_drawer);
+        _navigationLayout =new NavigationLayout(getApplicationContext(), _left_drawer);
 
         InitParams();
 
-        left_drawer.addView(navigationLayout);
+        _left_drawer.addView(_navigationLayout);
     }
 
     private void InitParams(){

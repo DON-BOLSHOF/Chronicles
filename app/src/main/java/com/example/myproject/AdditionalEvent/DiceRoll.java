@@ -11,9 +11,9 @@ import com.example.myproject.SpriteAnimation.GameView;
 
 public class DiceRoll extends Fragment
 {
-    private int rollValue;
+    private int _rollValue;
     public DiceRoll(int rollValue){
-        this.rollValue = rollValue;
+        _rollValue = rollValue;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class DiceRoll extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = new GameView(getContext(), rollValue);
+        View inflate = new GameView(getContext(), _rollValue);
         return inflate;
     }
 }

@@ -23,69 +23,51 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class ReadJsonScene {
-    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences _sharedPreferences;
     private static final String SAVED_TITLES = "TITLES";
 
-    public static ArrayList<Event> ReadContinueSceneJSONFile(Context context) throws IOException, JSONException {
-
-        // Read content of company.json
+    public static  ArrayList<Event> ReadSceneJSONFile(Context context) throws IOException, JSONException{
         String jsonText = ReadText(context, R.raw.sorce);
 
-        String _titles =  context.getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
+        String titles =  context.getSharedPreferences("MyPrefs", MODE_PRIVATE).getString("TITLES", null);
 
-        JSONObject _jsonRoot = new JSONObject(jsonText);
-        JSONArray _jsonEvents = _jsonRoot.getJSONArray("Event");
+        JSONObject jsonRoot = new JSONObject(jsonText);
+        JSONArray jsonEvents = jsonRoot.getJSONArray("Event");
 
-        ArrayList<Event> events = new ArrayList<Event>();
+        ArrayList<Event> events = new ArrayList<>();
 
-        for (int i = 0; i< _jsonEvents.length(); i++) {
-            JSONObject _jsonEvent = _jsonEvents.getJSONObject(i);
+        for (int i = 0; i< jsonEvents.length(); i++) {
+            JSONObject _jsonEvent = jsonEvents.getJSONObject(i);
 
             Event _event = ReadEvent(_jsonEvent);
 
-            if (_titles.contains(_event.get_titleName()))
-                events.add(_event);
-
-        }
-
-        return events;
-    }
-
-    public static  ArrayList<Event> ReadNewSceneJSONFile(Context context) throws IOException, JSONException{
-        String jsonText = ReadText(context, R.raw.sorce);
-
-        JSONObject _jsonRoot = new JSONObject(jsonText);
-        JSONArray _jsonEvents = _jsonRoot.getJSONArray("Event");
-
-        ArrayList<Event> events = new ArrayList<Event>();
-
-        for (int i = 0; i< _jsonEvents.length(); i++) {
-            JSONObject _jsonEvent = _jsonEvents.getJSONObject(i);
-
-            Event _event = ReadEvent(_jsonEvent);
-
-            events.add(_event);
+            if (titles!= null) {
+                if(titles.contains(_event.getTitleName()))
+                    events.add(_event);
+            }
+            else{
+                events.add((_event));
+            }
         }
 
         return events;
     }
 
     public static void OverWriteParams(Context context, ArrayList<Event> events) throws  IOException, JSONException{
-        sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        _sharedPreferences = context.getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = _sharedPreferences.edit();
         if(events == null){
             editor.putString(SAVED_TITLES, null);
-            editor.commit();
         }else {
             JSONArray _lastEventsNames = new JSONArray();
 
             for (int i = 0; i < events.size(); i++) {
-                _lastEventsNames.put(events.get(i).get_titleName());
+                _lastEventsNames.put(events.get(i).getTitleName());
             }
 
             editor.putString(SAVED_TITLES, _lastEventsNames.toString());
-            editor.commit();
         }
+        editor.apply();
     }
 
     private static CustomButton ReadButtonJson(JSONObject button) throws  JSONException {
@@ -117,7 +99,7 @@ public class ReadJsonScene {
         reactions = new Reaction[reactionJSON.length()];
 
         for(int i = 0; i< reactionJSON.length(); i++) {
-            String[][] changed = null;
+            String[][] changed;
             JSONObject object = reactionJSON.getJSONObject(i);
             String reactTitle = object.getString("Title");
             String reactText = object.getString("ReactionText");
@@ -146,50 +128,50 @@ public class ReadJsonScene {
         return customButton;
     }
 
-    private static Event ReadEvent(JSONObject _jsonEvent) throws  JSONException {
+    private static Event ReadEvent(JSONObject jsonEvent) throws  JSONException {
 
-        String _titleName = _jsonEvent.getString("TitleName");
-        String _imageName = _jsonEvent.getString("ImageName");
-        String _eventText = _jsonEvent.getString("EventText");
+        String titleName = jsonEvent.getString("TitleName");
+        String imageName = jsonEvent.getString("ImageName");
+        String eventText = jsonEvent.getString("EventText");
 
-        Boolean _isLoop = _jsonEvent.getBoolean("IsLoop");
+        boolean isLoop = jsonEvent.getBoolean("IsLoop");
 
-        String _typeEvent = _jsonEvent.getString("EventType");
+        String typeEvent = jsonEvent.getString("EventType");
 
-        CustomButton[] _buttons =  ReadButton(_jsonEvent);
-        if(_buttons != null) {
-            _eventText = RequiredParameters(_buttons[0].getToCheck(), _eventText);
+        CustomButton[] buttons =  ReadButton(jsonEvent);
+        if(buttons != null) {
+            eventText = RequiredParameters(buttons[0].getToCheck(), eventText);
         }
 
-        boolean _hasAddEvent = _jsonEvent.getBoolean("HasAddEvent");
+        boolean hasAddEvent = jsonEvent.getBoolean("HasAddEvent");
 
-        Event mEvent = new Event(_titleName, _imageName, _eventText, _buttons, _isLoop, _typeEvent, _hasAddEvent);
+        Event mEvent = new Event(titleName, imageName, eventText, buttons, isLoop, typeEvent, hasAddEvent);
 
-        if(_isLoop) {
-            int _frequency = _jsonEvent.getInt("Frequency");
-            mEvent.set_frequency(_frequency);
+        if(isLoop) {
+            int frequency = jsonEvent.getInt("Frequency");
+            mEvent.setFrequency(frequency);
         }
 
-        String _addMusic = _jsonEvent.getBoolean("HasAddMusic") ? _jsonEvent.getString("AddMusic") : null;
-        if(_addMusic != null){
-            mEvent.set_addMusicName(_addMusic);
+        String addMusic = jsonEvent.getBoolean("HasAddMusic") ? jsonEvent.getString("AddMusic") : null;
+        if(addMusic != null){
+            mEvent.setAddMusicName(addMusic);
         }
 
-        String _nameToSet = !_jsonEvent.getString("SetEvent").equals("Nothing") ? _jsonEvent.getString("SetEvent") :null;
-        if(_nameToSet != null){
-            mEvent.set_nameEventToSet(_nameToSet);
+        String nameToSet = !jsonEvent.getString("SetEvent").equals("Nothing") ? jsonEvent.getString("SetEvent") :null;
+        if(nameToSet != null){
+            mEvent.setNameEventToSet(nameToSet);
         }
 
-        if(_hasAddEvent){
-            String _addEventType =  _jsonEvent.getString("AddEventType");
-            mEvent.set_typeAddEvent(_addEventType);
+        if(hasAddEvent){
+            String addEventType =  jsonEvent.getString("AddEventType");
+            mEvent.setTypeAddEvent(addEventType);
 
-            if (_addEventType.equals("ReactEvent")) {
-                AdditionalEvent _addEvent = ReadAddEvent(_jsonEvent);
-                mEvent.set_addEvent(_addEvent);
-            } else if (_addEventType.equals("NoteEvent")) {
-                NoteEvent _noteEvent = ReadNoteEvent(_jsonEvent);
-                mEvent.set_noteEvent(_noteEvent);
+            if (addEventType.equals("ReactEvent")) {
+                AdditionalEvent _addEvent = ReadAddEvent(jsonEvent);
+                mEvent.setAddEvent(_addEvent);
+            } else if (addEventType.equals("NoteEvent")) {
+                NoteEvent _noteEvent = ReadNoteEvent(jsonEvent);
+                mEvent.setNoteEvent(_noteEvent);
             }
 
         }
@@ -200,27 +182,29 @@ public class ReadJsonScene {
     private static String RequiredParameters(String[][] _toCheckAnnotation , String _eventText) {
         if (_toCheckAnnotation != null && _toCheckAnnotation[0][0].equals("RandomValue")) {
             _eventText += "\n\nТребуется:\n";
-            for (int i = 0; i < _toCheckAnnotation.length; i++) {
-                if(_toCheckAnnotation[i][0].equals("Money")){
-                    _eventText += String.format("%s: %s.\n", "Грошей", _toCheckAnnotation[i][1]);
+            StringBuilder _eventTextBuilder = new StringBuilder(_eventText);
+            for (String[] strings : _toCheckAnnotation) {
+                if (strings[0].equals("Money")) {
+                    _eventTextBuilder.append(String.format("%s: %s.\n", "Грошей", strings[1]));
                 }
 
-                if(_toCheckAnnotation[i][0].equals("Popularity")){
-                    _eventText +="Быть достаточно популярным.\n";
+                if (strings[0].equals("Popularity")) {
+                    _eventTextBuilder.append("Быть достаточно популярным.\n");
                 }
 
-                if(_toCheckAnnotation[i][0].equals("FatherRelations")){
-                    _eventText += "Ладить с отцом\n";
+                if (strings[0].equals("FatherRelations")) {
+                    _eventTextBuilder.append("Ладить с отцом\n");
                 }
 
-                if(_toCheckAnnotation[i][0].equals("FightingSkill")){
-                    _eventText += String.format("%s: %s.\n", "Хорошо обращаться с мечом", _toCheckAnnotation[i][1]);
+                if (strings[0].equals("FightingSkill")) {
+                    _eventTextBuilder.append(String.format("%s: %s.\n", "Хорошо обращаться с мечом", strings[1]));
                 }
 
-                if(_toCheckAnnotation[i][0].equals("RandomValue")){
-                    _eventText += "Подбросить кубик";
+                if (strings[0].equals("RandomValue")) {
+                    _eventTextBuilder.append("Подбросить кубик");
                 }
             }
+            _eventText = _eventTextBuilder.toString();
         }
         return  _eventText;
     }
@@ -235,8 +219,8 @@ public class ReadJsonScene {
     }
 
     private static AdditionalEvent ReadAddEvent(JSONObject _jsonEvent) throws JSONException {
-        String[][] check = null;
-        String[][] changed = null;
+        String[][] check;
+        String[][] changed;
 
         JSONObject checkEvent = _jsonEvent.getJSONObject("WhatCheck");
         JSONArray toCheck = checkEvent.getJSONArray("ToCheck");
@@ -313,7 +297,7 @@ public class ReadJsonScene {
         InputStream is = context.getResources().openRawResource(resId);
         BufferedReader br= new BufferedReader(new InputStreamReader(is));
         StringBuilder sb= new StringBuilder();
-        String s= null;
+        String s;
         while((  s = br.readLine())!=null) {
             sb.append(s);
             sb.append("\n");

@@ -12,21 +12,21 @@ import com.example.myproject.MainActivities.MainActivity;
 import com.example.myproject.R;
 
 public class DiceRollFragment extends AddEventParent {
-    private int rollValue;
-    private String[][] reactions;
-    private TextView RollText;
+    private int _rollValue;
+    private String[][] _reactions;
+    private TextView _rollText;
     
     public DiceRollFragment(OnDestroyed events, int RollValue, String[][] reactions) {
         super(events);
-        this.reactions = reactions;
-        this.rollValue = RollValue;
+        _reactions = reactions;
+        _rollValue = RollValue;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DiceRoll roll = new DiceRoll(rollValue);
+        DiceRoll roll = new DiceRoll(_rollValue);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.RollCube, roll)
                 .addToBackStack(null)
@@ -39,24 +39,24 @@ public class DiceRollFragment extends AddEventParent {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.roll_fragment, container, false);
         
-        RollText = view.findViewById(R.id.RollText);
-        String text = "";
-        for(int i = 0; i<reactions.length; i++){
-            switch (reactions[i][0]) {
+        _rollText = view.findViewById(R.id.RollText);
+        StringBuilder text = new StringBuilder();
+        for (String[] reaction : _reactions) {
+            switch (reaction[0]) {
                 case "Popularity": {//Roll возможен лишь с этими параметрами.
-                    text += String.format("%s: %s + %s < %s\n","Популярность", Integer.toString(rollValue+1), MainActivity.character.getPopularity(), reactions[i][1]);
+                    text.append(String.format("%s: %s + %s < %s\n", "Популярность", (_rollValue + 1), MainActivity.character.getPopularity(), reaction[1]));
                     break;
                 }
                 case "FightingSkill": {
-                    text += String.format("%s: %s + %s %s %s\n","Уровень фехтования", Integer.toString(rollValue+1), MainActivity.character.getFightSkill(), MainActivity.character.getFightSkill() + rollValue < Integer.parseInt(reactions[i][1])?"<":">" , reactions[i][1]);
+                    text.append(String.format("%s: %s + %s %s %s\n", "Уровень фехтования", (_rollValue + 1), MainActivity.character.getFightSkill(), MainActivity.character.getFightSkill() + _rollValue < Integer.parseInt(reaction[1]) ? "<" : ">", reaction[1]));
                     break;
                 }
             }
         }
 
-        RollText.setText(text);
+        _rollText.setText(text.toString());
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.shake);
-        RollText.setAnimation(animation);
+        _rollText.setAnimation(animation);
 
         SetViewCreatingAnim();
         SetDestroyButton();

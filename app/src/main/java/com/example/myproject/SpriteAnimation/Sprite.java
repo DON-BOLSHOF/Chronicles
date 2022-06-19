@@ -89,7 +89,7 @@ public class Sprite {
     }
 
     public void setFrameTime(double frameTime) {
-        this.frameTime = Math.abs(frameTime);;
+        this.frameTime = Math.abs(frameTime);
     }
 
     public double getTimeForCurrentFrame() {

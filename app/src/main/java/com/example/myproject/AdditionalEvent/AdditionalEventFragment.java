@@ -10,13 +10,13 @@ import android.widget.TextView;
 import com.example.myproject.R;
 
 public class AdditionalEventFragment extends AddEventParent {
-    private TextView params;
-    private AdditionalEvent addEvent;
+    private TextView _params;
+    private AdditionalEvent _addEvent;
 
 
     public AdditionalEventFragment(OnDestroyed events, AdditionalEvent addEvent){
         super(events);
-        this.addEvent = addEvent;
+        _addEvent = addEvent;
     }
 
     @Override
@@ -46,14 +46,14 @@ public class AdditionalEventFragment extends AddEventParent {
 
     private void InitSceneParam(){
         title =  view.findViewById(R.id.Title);
-        params =  view.findViewById(R.id.Params);
+        _params =  view.findViewById(R.id.Params);
         description =  view.findViewById(R.id.Description);
     }
 
     private void InitAdditionalEvent(){
-        title.setText(addEvent.getTitle());
-        params.setText(addEvent.getParams());
-        description.setText(addEvent.getDescription());
+        title.setText(_addEvent.getTitle());
+        _params.setText(_addEvent.getParams());
+        description.setText(_addEvent.getDescription());
     }
 
 }

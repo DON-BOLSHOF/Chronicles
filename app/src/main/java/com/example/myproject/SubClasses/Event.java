@@ -4,131 +4,131 @@ import com.example.myproject.AdditionalEvent.AdditionalEvent;
 import com.example.myproject.AdditionalEvent.NoteEvent;
 
 public class Event {
-    private String _titleName;
-    private String _imageName;
-    private String _eventText;
-    private CustomButton[] _buttons;
-    private boolean _isLoop;
-    private int _frequency; //С этого момента дополнительные переменные, которые нужно проверить, не в конструктор будем записывать, а через сет делать
-    private String _eventType;
-    private boolean _hasAddEvent;
-    private String _typeAddEvent= null;
-    private AdditionalEvent _addEvent= null;
-    private NoteEvent _noteEvent= null;
-    private String _addMusicName= null;
-    private String _nameEventToSet= null;
+    private String titleName;
+    private String imageName;
+    private String eventText;
+    private CustomButton[] buttons;
+    private boolean isLoop;
+    private int frequency; //С этого момента дополнительные переменные, которые нужно проверить, не в конструктор будем записывать, а через сет делать
+    private String eventType;
+    private boolean hasAddEvent;
+    private String typeAddEvent;
+    private AdditionalEvent addEvent;
+    private NoteEvent noteEvent;
+    private String addMusicName;
+    private String nameEventToSet;
 
     public Event(String _titleName, String _imageName, String _eventText, CustomButton[] _buttons, boolean _isLoop, String _eventType, boolean _hasAddEvent) {
-        this._titleName = _titleName;
-        this._imageName = _imageName;
-        this._eventText = _eventText;
-        this._buttons = _buttons;
-        this._eventType = _eventType;
-        this._isLoop = _isLoop;
-        this._hasAddEvent = _hasAddEvent;
+        this.titleName = _titleName;
+        this.imageName = _imageName;
+        this.eventText = _eventText;
+        this.buttons = _buttons;
+        this.eventType = _eventType;
+        this.isLoop = _isLoop;
+        this.hasAddEvent = _hasAddEvent;
     }
 
-    public int get_frequency() {
-        return _frequency;
+    public int getFrequency() {
+        return frequency;
     }
 
-    public void set_frequency(int _frequency) {
-        this._frequency = _frequency;
+    public void setFrequency(int frequency) {
+        this.frequency = frequency;
     }
 
-    public boolean is_hasAddEvent() {
-        return _hasAddEvent;
+    public boolean isHasAddEvent() {
+        return hasAddEvent;
     }
 
-    public void set_hasAddEvent(boolean _hasAddEvent) {
-        this._hasAddEvent = _hasAddEvent;
+    public void setHasAddEvent(boolean hasAddEvent) {
+        this.hasAddEvent = hasAddEvent;
     }
 
-    public String get_typeAddEvent() {
-        return _typeAddEvent;
+    public String getTypeAddEvent() {
+        return typeAddEvent;
     }
 
-    public void set_typeAddEvent(String _typeAddEvent) {
-        this._typeAddEvent = _typeAddEvent;
+    public void setTypeAddEvent(String typeAddEvent) {
+        this.typeAddEvent = typeAddEvent;
     }
 
-    public String get_nameEventToSet() {
-        return _nameEventToSet;
+    public String getNameEventToSet() {
+        return nameEventToSet;
     }
 
-    public void set_nameEventToSet(String _nameEventToSet) {
-        this._nameEventToSet = _nameEventToSet;
+    public void setNameEventToSet(String nameEventToSet) {
+        this.nameEventToSet = nameEventToSet;
     }
 
-    public String get_eventType() {
-        return _eventType;
+    public String getEventType() {
+        return eventType;
     }
 
-    public void set_eventType(String _eventType) {
-        this._eventType = _eventType;
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
 
-    public NoteEvent get_noteEvent() {
-        return _noteEvent;
+    public NoteEvent getNoteEvent() {
+        return noteEvent;
     }
 
-    public void set_noteEvent(NoteEvent _noteEvent) {
-        this._noteEvent = _noteEvent;
+    public void setNoteEvent(NoteEvent noteEvent) {
+        this.noteEvent = noteEvent;
     }
 
-    public AdditionalEvent get_addEvent() {
-        return _addEvent;
+    public AdditionalEvent getAddEvent() {
+        return addEvent;
     }
 
-    public String get_addMusicName() {
-        return _addMusicName;
+    public String getAddMusicName() {
+        return addMusicName;
     }
 
-    public void set_addMusicName(String _addMusicName) {
-        this._addMusicName = _addMusicName;
+    public void setAddMusicName(String addMusicName) {
+        this.addMusicName = addMusicName;
     }
 
-    public void set_addEvent(AdditionalEvent _addEvent) {
-        this._addEvent = _addEvent;
+    public void setAddEvent(AdditionalEvent addEvent) {
+        this.addEvent = addEvent;
     }
 
-    public String get_titleName() {
-        return _titleName;
+    public String getTitleName() {
+        return titleName;
     }
 
-    public String get_imageName() {
-        return _imageName;
+    public String getImageName() {
+        return imageName;
     }
 
-    public String get_eventText() {
-        return _eventText;
+    public String getEventText() {
+        return eventText;
     }
 
-    public void set_titleName(String _titleName) {
-        this._titleName = _titleName;
+    public void setTitleName(String titleName) {
+        this.titleName = titleName;
     }
 
-    public void set_imageName(String _imageName) {
-        this._imageName = _imageName;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
-    public void set_eventText(String _eventText) {
-        this._eventText = _eventText;
+    public void setEventText(String eventText) {
+        this.eventText = eventText;
     }
 
-    public CustomButton[] get_buttons() {
-        return _buttons;
+    public CustomButton[] getButtons() {
+        return buttons;
     }
 
-    public void set_buttons(CustomButton[] _buttons) {
-        this._buttons = _buttons;
+    public void setButtons(CustomButton[] buttons) {
+        this.buttons = buttons;
     }
 
-    public boolean is_isLoop() {
-        return _isLoop;
+    public boolean isLoop() {
+        return !isLoop;
     }
 
-    public void set_isLoop(boolean _isLoop) {
-        this._isLoop = _isLoop;
+    public void setLoop(boolean loop) {
+        this.isLoop = loop;
     }
 }

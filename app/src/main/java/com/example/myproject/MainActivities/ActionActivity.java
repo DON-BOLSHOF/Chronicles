@@ -28,11 +28,6 @@ public class ActionActivity extends ParentNavigationActivity implements Fragment
     private Boolean _hasPermissionToMusic = true;
     protected static ImageView blackout;
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     protected void onPause() {
         super.onPause();
 
@@ -64,8 +59,6 @@ public class ActionActivity extends ParentNavigationActivity implements Fragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_activity);
-
-        CheckMusicPermission();
 
         blackout = findViewById(R.id.BackgroundBlackout);
 

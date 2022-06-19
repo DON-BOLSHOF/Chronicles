@@ -28,11 +28,11 @@ public class ReadJsonHero {
         return _hero;
     }
 
-    private static String readText(Context context, int resId) throws IOException {
+    private static String ReadText(Context context, int resId) throws IOException {
         InputStream _is = context.getResources().openRawResource(resId);
         BufferedReader _br= new BufferedReader(new InputStreamReader(_is));
         StringBuilder _sb= new StringBuilder();
-        String s= null;
+        String s;
         while((  s = _br.readLine())!=null) {
             _sb.append(s);
             _sb.append("\n");
@@ -94,16 +94,15 @@ public class ReadJsonHero {
             String JsonHero = HeroToJson(hero);
 
             editor.putString(SAVED_HERO, JsonHero);
-            editor.commit();
         }
         else{
             editor.putString(SAVED_HERO, null);
-            editor.commit();
         }
+        editor.apply();
     }
 
     public static Hero SetNewGameHero(Context context) throws JSONException, IOException {
-        String jsonText = readText(context, R.raw.hero);
+        String jsonText = ReadText(context, R.raw.hero);
 
         JSONObject _jsonRoot = new JSONObject(jsonText);
         int _fatherRel = _jsonRoot.getInt("FatherRelations");
