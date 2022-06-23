@@ -26,16 +26,8 @@ public class CustomButton {
         return reaction;
     }
 
-    public void setReaction(Reaction[] reaction) {
-        this.reaction = reaction;
-    }
-
     public String[][] getToCheck() {
         return toCheck;
-    }
-
-    public void setToCheck(String[][] toCheck) {
-        this.toCheck = toCheck;
     }
 
     public CustomButton(String name, Reaction[] reaction, String[][] toCheck) {

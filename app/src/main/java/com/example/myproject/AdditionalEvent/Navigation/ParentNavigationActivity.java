@@ -11,8 +11,8 @@ import com.example.myproject.MainActivities.MainActivity;
 import com.example.myproject.R;
 
 public class ParentNavigationActivity extends AppCompatActivity  implements FragmentSceneManager.UpdateNavigationParams {
-    NavigationLayout _navigationLayout;
-    ConstraintLayout _left_drawer;
+    private NavigationLayout _navigationLayout;
+    private ConstraintLayout _left_drawer;
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {

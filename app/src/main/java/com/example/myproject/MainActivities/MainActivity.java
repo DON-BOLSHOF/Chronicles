@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
                 if(_titles.contains("Добро пожаловать в Декруа") || _titles.contains("Пробуждение"))  // Да костыль
                     currentEvent = chapterEvents.get(0);
-                else
-                    currentEvent = chapterEvents.get(RandomEvent());
+                else {
+                    Random rand = new Random();
+                    currentEvent = chapterEvents.get(rand.nextInt(chapterEvents.size()));
+                }
 
                 Intent intent = new Intent(MainActivity.this, ActionActivity.class);
                 startActivity(intent);
@@ -79,11 +81,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             continueButton.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Ваш путь еще не начался...", Toast.LENGTH_SHORT).show());
         }
-    }
-
-    private int RandomEvent(){
-        Random rand = new Random();
-        return rand.nextInt(chapterEvents.size());
     }
 
     private void OverWriteParams(){

@@ -66,11 +66,6 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_scene,
                 container, false);
@@ -284,7 +279,7 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
         CustomButton[] reaction = null;
 
         if(button.getToCheck() != null) {
-            if (HasPassTheRollPositive(button.getToCheck())) {
+            if (HasPassTheRoll(button.getToCheck(), new Comparison(new PositiveCompare()))) {
 
                 buttonReact = button.getReaction()[0];
 
@@ -424,7 +419,8 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             for (String[] changeStat : changeStats) {
                 switch (changeStat[0]) {
                     case "Money": {
-                        AnimateNumberScroll(MainActivity.character.getMoney(), MainActivity.character.getMoney() + Integer.parseInt(changeStat[1]), _characterMoney);
+                        int finalValue = Math.max(MainActivity.character.getMoney() + Integer.parseInt(changeStat[1]), 0); //Отрицательных денег не должно быть
+                        AnimateNumberScroll(MainActivity.character.getMoney(), finalValue, _characterMoney);
 
                         MainActivity.character.boostMoney(Integer.parseInt(changeStat[1]));
                         mUpdateNavigationParams.UpdateParam("Money", MainActivity.character.getMoney());
@@ -451,8 +447,11 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                     }
                     case "ShopLvl": {
                         MainActivity.character.boostShopLvl((Integer.parseInt(changeStat[1])));
-                        if(Integer.parseInt(changeStat[1]) == 0) //Самый худший костыль, из всех, но в силу архитектуры чтения json-файла придется использовать это
+                        if(Integer.parseInt(changeStat[1]) == 0) { //Самый худший костыль, из всех, но в силу архитектуры чтения json-файла придется использовать этo
+                            AnimateNumberScroll(MainActivity.character.getMoney(), MainActivity.character.getMoney() + MainActivity.character.getShopLvl() * 2, _characterMoney);
                             MainActivity.character.boostMoney(MainActivity.character.getShopLvl() * 2);
+                            mUpdateNavigationParams.UpdateParam("Money", MainActivity.character.getMoney());
+                        }
                         mUpdateNavigationParams.UpdateParam("ShopLvl", MainActivity.character.getShopLvl());
                         break;
                     }
@@ -487,17 +486,16 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
             String[][] toCheck = testEvent.getAddEvent().getCheck();
             String type = testEvent.getAddEvent().getType();
 
-            if(type.equals("Neutral"))
-                return true; //Нечего тут проверять
-
             if(type.equals("Positive"))
-                return HasPassTheRollPositive(toCheck); //Если не прошел ивент будет вызываться
+                return HasPassTheRoll(toCheck, new Comparison(new PositiveCompare())); //Если не прошел ивент будет вызываться
             else
-                return HasPassTheRollNegative(toCheck);
+                return HasPassTheRoll(toCheck, new Comparison(new NegativeCompare()));
         }
     }
 
-    private boolean HasPassTheRollPositive(String[][] _reactions){
+////////////////////////Rolling/////////////////////////////////////////////////////////////////////////
+
+    private boolean HasPassTheRoll(String[][] _reactions, Comparison compare){ //Как я понял нет делегатов в Java(Я хотел передать проверку как ивент в C#)
        boolean hasPass = true;
        int rollValue = 0;
 
@@ -507,64 +505,52 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 case "Money": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
                     int myParams = MainActivity.character.getMoney();
-                    if (myParams < paramsToCheck) {
-                        hasPass = false;
-                    }
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "Popularity": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
                     int myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                    if (myParams+rollValue < paramsToCheck) {                              // Как в ДНД.
-                        hasPass = false;
-                    }
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "FatherRelations": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
                     int myParams = MainActivity.character.getFatherRel();
-                    if (myParams+rollValue < paramsToCheck) {
-                        hasPass = false;
-                    }
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "FightingSkill": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
                     int myParams = MainActivity.character.getFightSkill();
-                    if (myParams+rollValue < paramsToCheck) {
-                        hasPass = false;
-                    }
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "ShopLvl": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
                     int myParams = MainActivity.character.getShopLvl();
-                    if (myParams < paramsToCheck) {
-                        hasPass = false;
-                    }
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "HasEquip": {
-                    boolean myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasEquip() != myParam)
-                        hasPass = false;
+                    int myParams = MainActivity.character.isHasEquip() ? 1 : 0;
+                    int paramsToCheck = Boolean.parseBoolean(reaction[1])? 1 : 0;
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "HasHorse": {
-                    boolean myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasHorse() != myParam)
-                        hasPass = false;
+                    int myParams = MainActivity.character.isHasHorse() ? 1 : 0;
+                    int paramsToCheck = Boolean.parseBoolean(reaction[1])? 1 : 0;
+                    hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "RandomEvent": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
-                    if(CubeRoll() < paramsToCheck)
-                        hasPass = false;
+                    hasPass = compare.Compare(CubeRoll(),paramsToCheck);
                     break;
                 }
                 case "RandomValue": {
                     rollValue = CubeRoll();
-
                     SetRoll();
                     SetDiceRollFragment(rollValue,_reactions);
                     break;
@@ -575,86 +561,50 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
        return hasPass;
     }
 
-    private boolean HasPassTheRollNegative(String[][] _reactions){
-       boolean hasPass = true;
-
-        for (String[] reaction : _reactions) {
-            String temp = reaction[0];
-            int rollValue = 0;
-            switch (temp) {
-                case "Money": {
-                    int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getMoney();
-                    if (myParams > paramsToCheck) {
-                        hasPass = false;
-                    }
-                    break;
-                }
-                case "Popularity": {
-                    int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
-                    if (myParams - rollValue > paramsToCheck) {                              // Как в ДНД.
-                        hasPass = false;
-                    }
-                    break;
-                }
-                case "FatherRelations": {
-                    int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getFatherRel();
-                    if (myParams - rollValue > paramsToCheck) {
-                        hasPass = false;
-                    }
-                    break;
-                }
-                case "FightingSkill": {
-                    int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getFightSkill();
-                    if (myParams - rollValue > paramsToCheck) {
-                        hasPass = false;
-                    }
-                    break;
-                }
-                case "ShopLvl": {
-                    int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getShopLvl();
-                    if (myParams > paramsToCheck) {
-                        hasPass = false;
-                    }
-                    break;
-                }
-                case "HasEquip": {
-                    boolean myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasEquip() == myParam)
-                        hasPass = false;
-                    break;
-                }
-                case "HasHorse": {
-                    boolean myParam = Boolean.parseBoolean(reaction[1]);
-                    if (MainActivity.character.isHasHorse() == myParam)
-                        hasPass = false;
-                    break;
-                }
-                case "RandomEvent": {
-                    int paramsToCheck = Integer.parseInt(reaction[1]);
-                    if(CubeRoll() > paramsToCheck)
-                        hasPass = false;
-                    break;
-                }
-                case "RandomValue": {
-                    rollValue = CubeRoll();
-                    SetRoll();
-                    SetDiceRollFragment(rollValue, _reactions);
-                    break;
-                }
-            }
-        }
-
-       return hasPass;
+    interface Compare{
+        boolean IsSurpass(int a1, int a2);
     }
 
-    private int CubeRoll(){
+    private class PositiveCompare implements Compare{
+
+        @Override
+        public boolean IsSurpass(int a1, int a2) {
+            return a1>=a2;
+        }
+    }
+
+    private class NegativeCompare implements Compare{
+
+        @Override
+        public boolean IsSurpass(int a1, int a2) {
+            return a1<a2;
+        }
+    }
+
+    private class Comparison{
+        Compare compare;
+
+        public Comparison(Compare compare){
+            this.compare = compare;
+        }
+
+        public void setCompare(Compare compare){
+            this.compare = compare;
+        }
+
+        public boolean Compare(int a1, int a2){
+            return compare.IsSurpass(a1, a2);
+        }
+    }
+
+    private int CubeRoll(){ // Логичнее было разделить из-за абсолютно разного функционала
         Random rand = new Random();
         return  rand.nextInt(20) ;
+    }
+
+    private int FrequencyRoll(){
+        Random rand = new Random();
+        return  rand.nextInt(6);
     }
 
     private boolean CheckFrequency(Event mEvent){
@@ -665,18 +615,13 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
 
         return FrequencyRoll()>=Math.abs(frequency-6); //Если частота меньше то шанс ролла меньше должен быть
     }
-
-    private int FrequencyRoll(){
-        Random rand = new Random();
-        return  rand.nextInt(6);
-    }
 ////////////////////////////Animations///////////////////////////////////////////////////////////
     private void AnimateNumberScroll(int initialValue, int finalValue, final TextView textview) {
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(initialValue, finalValue);
-        valueAnimator.setDuration(1000);
+      ValueAnimator valueAnimator = ValueAnimator.ofInt(initialValue, finalValue);
+      valueAnimator.setDuration(1000);
 
-        valueAnimator.addUpdateListener(valueAnimator1 -> textview.setText(valueAnimator1.getAnimatedValue().toString()));
+      valueAnimator.addUpdateListener(valueAnimator1 -> textview.setText(valueAnimator1.getAnimatedValue().toString()));
       valueAnimator.start();
     }
 
