@@ -510,19 +510,19 @@ public class FragmentSceneManager extends Fragment implements AddEventParent.OnD
                 }
                 case "Popularity": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getPopularity(); // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
+                    int myParams = MainActivity.character.getPopularity() + rollValue; // Добавим щепотку реализма в роли случайности, условное подбрасывание кубика
                     hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "FatherRelations": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getFatherRel();
+                    int myParams = MainActivity.character.getFatherRel() + rollValue;
                     hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
                 case "FightingSkill": {
                     int paramsToCheck = Integer.parseInt(reaction[1]);
-                    int myParams = MainActivity.character.getFightSkill();
+                    int myParams = MainActivity.character.getFightSkill() + rollValue;
                     hasPass = compare.Compare(myParams,paramsToCheck);
                     break;
                 }
